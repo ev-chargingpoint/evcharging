@@ -1,15 +1,13 @@
-import 'package:evchargingpoint/view/auth/input_profile_screen.dart';
-import 'package:evchargingpoint/view/auth/login_screen.dart';
 import 'package:flutter/material.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+class InputProfileScreen extends StatefulWidget {
+  const InputProfileScreen({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<InputProfileScreen> createState() => _InputProfileScreenState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _InputProfileScreenState extends State<InputProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
         const Padding(
           padding: EdgeInsets.all(8.0),
           child: Text(
-            'Register your account',
+            'Set your profile',
             style: TextStyle(fontSize: 20),
           ),
         ),
@@ -38,12 +36,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   Radius.circular(10),
                 ),
               ),
-              prefixIcon: Icon(Icons.email),
-              labelText: 'Email',
+              prefixIcon: Icon(Icons.person),
+              labelText: 'Name',
             ),
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextFormField(
@@ -53,12 +51,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   Radius.circular(10),
                 ),
               ),
-              prefixIcon: Icon(Icons.lock),
-              labelText: 'Password',
+              prefixIcon: Icon(Icons.phone),
+              labelText: 'Phone Number',
             ),
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextFormField(
@@ -68,21 +66,29 @@ class _RegisterPageState extends State<RegisterPage> {
                   Radius.circular(10),
                 ),
               ),
-              prefixIcon: Icon(Icons.lock),
-              labelText: 'Confirm Password',
+              prefixIcon: Icon(Icons.car_repair),
+              labelText: 'Car Name',
             ),
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextFormField(
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              prefixIcon: Icon(Icons.car_rental),
+              labelText: 'Police Number',
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),      
         ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) {
-                    return const InputProfileScreen();
-                  }),
-                );
-          },
+          onPressed: () {},
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.greenAccent,
             minimumSize: const Size(200, 50),
@@ -90,24 +96,7 @@ class _RegisterPageState extends State<RegisterPage> {
               borderRadius: BorderRadius.circular(20),
             ),
           ),
-          child: const Text('Register'),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('Already have an account?'),
-            TextButton(
-              onPressed: () {
-                 Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) {
-                    return const LoginPage();
-                  }),
-                );
-              },
-              child: const Text('Login Now'),
-            ),
-          ],
+          child: const Text('Let Start', style: TextStyle(fontSize: 18),),
         ),
       ],
     )));

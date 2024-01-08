@@ -27,9 +27,13 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  String? _validateemail(String? value) {
-    if (value != null && value.length < 4) {
-      return 'Masukkan minimal 4 karakter';
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email tidak boleh kosong';
+    }
+    RegExp emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
+    if (!emailRegex.hasMatch(value)) {
+      return 'Email tidak valid';
     }
     return null;
   }
@@ -88,10 +92,10 @@ class _LoginPageState extends State<LoginPage> {
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 keyboardType: TextInputType.emailAddress,
-                validator: _validateemail,
+                validator: _validateEmail,
                 controller: _emailController,
                 decoration: const InputDecoration(
-                  border: OutlineInputBorder(
+                  border: UnderlineInputBorder(
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
                     ),
@@ -108,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
                 validator: _validatePassword,
                 controller: _passwordController,
                 decoration: const InputDecoration(
-                  border: OutlineInputBorder(
+                  border: UnderlineInputBorder(
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
                     ),
@@ -134,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                   LoginResponse? res = await _dataService.login(postModel);
                   if (res!.status == 200) {
                     await AuthManager.login(_emailController.text);
-// ignore: use_build_context_synchronously
+                    // ignore: use_build_context_synchronously
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
