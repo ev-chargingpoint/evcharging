@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:evchargingpoint/model/login_model.dart';
+import 'package:evchargingpoint/model/profile_model.dart';
 import 'package:flutter/material.dart';
 
 class ApiServices {
@@ -23,6 +24,21 @@ class ApiServices {
         return LoginResponse.fromJson(e.response!.data);
       }
       rethrow;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<ProfileResponse?> postProfile(ProfileInput ct) async {
+    try {
+      final response = await dio.post(
+        '$_baseUrl/contact-evcharging',
+        data: ct.toJson(),
+      );
+      if (response.statusCode == 200) {
+        return ProfileResponse.fromJson(response.data);
+      }
+      return null;
     } catch (e) {
       rethrow;
     }
