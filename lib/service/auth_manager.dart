@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthManager {
-  static const String loginStatusKey = '';
-  static const String loginTimeKey = '';
+  static Future<String?> getToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
+  static const String loginStatusKey = 'loginStatusKey';
+  static const String loginTimeKey = 'loginTimeKey';
   static Future<bool> isLoggedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('loginStatusKey') ?? false;
@@ -12,7 +17,7 @@ class AuthManager {
       try {
         DateTime loginTime = DateTime.parse(loginTimeString);
         final Duration timeDifference = DateTime.now().difference(loginTime);
-// Set maximum durasi untuk validasi login di bawah ini
+        // Set maximum durasi untuk validasi login di bawah ini
         const Duration maxDuration = Duration(hours: 4);
         if (timeDifference > maxDuration) {
           await logout();
@@ -28,11 +33,12 @@ class AuthManager {
     return false;
   }
 
-  static Future<void> login(String email) async {
+  static Future<void> login(String email, String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('loginStatusKey', true);
     prefs.setString('loginTimeKey', DateTime.now().toString());
     prefs.setString('email', email);
+    prefs.setString('token', token);
   }
 
   static Future<void> logout() async {
@@ -40,5 +46,6 @@ class AuthManager {
     prefs.remove('loginStatusKey');
     prefs.remove('loginTimeKey');
     prefs.remove('email');
+    prefs.remove('token');
   }
 }

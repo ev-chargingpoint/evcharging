@@ -2,8 +2,10 @@ import 'package:evchargingpoint/model/login_model.dart';
 import 'package:evchargingpoint/service/api_sevices.dart';
 import 'package:evchargingpoint/service/auth_manager.dart';
 import 'package:evchargingpoint/view/auth/register_screen.dart';
-import 'package:evchargingpoint/view/home_page.dart';
+import 'package:evchargingpoint/view/screen/admin/home_admin.dart';
+import 'package:evchargingpoint/view/widget/bottomNavigationUser.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,11 +16,14 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  ApiServices _dataService = ApiServices();
 
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  var _obscureText = true;
 
-  final ApiServices _dataService = ApiServices();
+  late SharedPreferences logindata;
+  String? token;
 
   @override
   void dispose() {
@@ -27,42 +32,10 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  String? _validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Email tidak boleh kosong';
-    }
-    RegExp emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
-    if (!emailRegex.hasMatch(value)) {
-      return 'Email tidak valid';
-    }
-    return null;
-  }
-
-  String? _validatePassword(String? value) {
-    if (value != null && value.length < 3) {
-      return 'Masukkan minimal 3 karakter';
-    }
-    return null;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    checkLogin();
-  }
-
-  void checkLogin() async {
-    bool isLoggedIn = await AuthManager.isLoggedIn();
-    if (isLoggedIn) {
-      // ignore: use_build_context_synchronously
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomePage(),
-        ),
-        (route) => false,
-      );
-    }
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
   }
 
   @override
@@ -92,7 +65,6 @@ class _LoginPageState extends State<LoginPage> {
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 keyboardType: TextInputType.emailAddress,
-                validator: _validateEmail,
                 controller: _emailController,
                 decoration: const InputDecoration(
                   border: UnderlineInputBorder(
@@ -109,56 +81,82 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
-                validator: _validatePassword,
                 controller: _passwordController,
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(
+                obscureText: _obscureText,
+                decoration: InputDecoration(
+                  border: const UnderlineInputBorder(
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
                     ),
                   ),
-                  prefixIcon: Icon(Icons.lock),
+                  prefixIcon: const Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                    onPressed: _togglePasswordVisibility,
+                    icon: Icon(
+                      _obscureText ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.grey,
+                    ),
+                  ),
                   labelText: 'Password',
                 ),
               ),
             ),
-            TextButton(
-              onPressed: () {},
-              child: const Text('Forgot Password?'),
-            ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                final isValidForm = _formKey.currentState!.validate();
-                if (isValidForm) {
-                  final postModel = LoginInput(
-                    email: _emailController.text,
-                    password: _passwordController.text,
-                  );
-                  LoginResponse? res = await _dataService.login(postModel);
-                  if (res!.status == 200) {
-                    await AuthManager.login(_emailController.text);
-                    // ignore: use_build_context_synchronously
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HomePage(),
-                      ),
-                      (route) => false,
-                    );
-                  } else {
-                    displaySnackbar(res.message);
-                  }
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.greenAccent,
-                minimumSize: const Size(200, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Container(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    final isValidForm = _formKey.currentState!.validate();
+                    if (isValidForm) {
+                      final postModel = LoginInput(
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                      );
+                      LoginResponse? res = await _dataService.login(postModel);
+                      if (res!.status == 200) {
+                        await AuthManager.login(
+                            _emailController.text, res.token!);
+                        // ignore: unrelated_type_equality_checks
+                        final prefs = await SharedPreferences.getInstance();
+                        final email = prefs.getString('email') ?? '';
+                        if (email == 'admin@gmail.com') {
+                          // ignore: use_build_context_synchronously
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const HomeAdmin()),
+                          );
+                        } else {
+                          // ignore: use_build_context_synchronously
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const BottomNavbar()),
+                          );
+                        }
+                      } else {
+                        // ignore: use_build_context_synchronously
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(res.message),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    }
+                  }, // Call the _login method on button press
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    padding: const EdgeInsets.all(16.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const Text('Login'),
                 ),
               ),
-              child: const Text('Login'),
             ),
             const SizedBox(height: 20),
             Row(
@@ -169,12 +167,15 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) {
-                        return const RegisterPage();
-                      }),
+                      MaterialPageRoute(
+                        builder: (context) => const RegisterPage(),
+                      ),
                     );
                   },
-                  child: const Text('Register Here'),
+                  child: Text(
+                    'Register Here',
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  ),
                 ),
               ],
             ),
@@ -182,10 +183,5 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ))),
     );
-  }
-
-  dynamic displaySnackbar(String msg) {
-    return ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(msg)));
   }
 }
