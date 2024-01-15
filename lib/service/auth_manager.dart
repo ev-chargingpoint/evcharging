@@ -41,6 +41,18 @@ class AuthManager {
     prefs.setString('token', token);
   }
 
+  
+  static Future<void> getuser(String namalengkap, nomorhp, namakendaraan, nomorpolisi, email, password, confirmpassword) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('namalengkap', namalengkap);
+    prefs.setString('nomorhp', nomorhp);
+    prefs.setString('namakendaraan', namakendaraan);
+    prefs.setString('nomorpolisi', nomorpolisi);
+    prefs.setString('email', email);
+    prefs.setString('password', password);
+    prefs.setString('confirmpassword', confirmpassword);
+  }
+
   static Future<void> logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('loginStatusKey');
@@ -48,4 +60,6 @@ class AuthManager {
     prefs.remove('email');
     prefs.remove('token');
   }
+
+
 }

@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:evchargingpoint/model/chargingstation_model.dart';
 import 'package:evchargingpoint/model/login_model.dart';
+import 'package:evchargingpoint/model/profile_model.dart';
 import 'package:evchargingpoint/model/register_model.dart';
 import 'package:evchargingpoint/service/auth_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiServices {
   final Dio dio = Dio();
@@ -131,46 +133,62 @@ class ApiServices {
     }
   }
 
-  Future<Map<String, dynamic>> GetProfile(String email) async {
+  Future<Profile> getUser() async {
     try {
-      String? token = await AuthManager.getToken();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? $token = prefs.getString('token');
+      // String? token = await AuthManager.getToken();
 
-      if (token == null) {
+      if ($token == null) {
         throw Exception('User not authenticated');
       }
 
-      Response response = await dio.get(
-        '$_baseUrl/profile/email',
+      final response = await dio.get(
+        '$_baseUrl/profile-evcharging',
         options: Options(
           headers: {
-            'Content-Type': 'multipart/form-data',
-            'Authorization': token,
+            'Authorization': $token,
           },
         ),
       );
-      return json.decode(response.toString());
-    } catch (error) {
-      print('Error in GetProfile: $error');
-      throw error;
+
+      if (response.statusCode == 200) {
+        final profile = Profile.fromJson(jsonDecode(response.data)['data']);
+        print(response.data);
+        print($token);
+        return profile;
+      } else {
+        throw Exception('Failed to load profile');
+      }
+    } on DioException catch (e) {
+      if (e.response != null && e.response!.statusCode != 200) {
+        debugPrint('Client error - the request cannot be fulfilled');
+        return Profile.fromJson(e.response!.data);
+      }
+      rethrow;
+    } catch (e) {
+      rethrow;
     }
   }
 
-  Future<Map<String, dynamic>> updateProfile(
-    String id,
-    String namalengkap,
-    String nomorhp,
-    String namakendaraan,
-    String nomorpolisi,
-  ) async {
+  Future<Profile> putProfile(
+    String text, {
+    required String namalengkap,
+    required String nomorhp,
+    required String namakendaraan,
+    required String nomorpolisi,
+  }) async {
     try {
-      String? token = await AuthManager.getToken();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? $token = prefs.getString('token');
+      // String? token = await AuthManager.getToken();
 
-      if (token == null) {
+      if ($token == null) {
         throw Exception('User not authenticated');
       }
 
-      Response response = await dio.put(
-        '$_baseUrl/profile/$id',
+      final response = await dio.put(
+        '$_baseUrl/profile-evcharging',
         data: {
           'namalengkap': namalengkap,
           'nomorhp': nomorhp,
@@ -179,15 +197,73 @@ class ApiServices {
         },
         options: Options(
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': token,
+            'Authorization': $token,
           },
         ),
       );
-      return json.decode(response.toString());
-    } catch (error) {
-      print('Error in updateProfile: $error');
-      throw error;
+
+      if (response.statusCode == 200) {
+        final profile = Profile.fromJson(jsonDecode(response.data)['data']);
+        print(response.data);
+        print($token);
+        return profile;
+      } else {
+        throw Exception('Failed to load profile');
+      }
+    } on DioException catch (e) {
+      if (e.response != null && e.response!.statusCode != 200) {
+        debugPrint('Client error - the request cannot be fulfilled');
+        return Profile.fromJson(e.response!.data);
+      }
+      rethrow;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Profile> putPassword(
+    String text, {
+    required String password,
+    required String confirmpassword,
+  }) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? $token = prefs.getString('token');
+      // String? token = await AuthManager.getToken();
+
+      if ($token == null) {
+        throw Exception('User not authenticated');
+      }
+
+      final response = await dio.put(
+        '$_baseUrl/profile-evcharging',
+        data: {
+          'password': password,
+          'confirmpassword': confirmpassword,
+        },
+        options: Options(
+          headers: {
+            'Authorization': $token,
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final profile = Profile.fromJson(jsonDecode(response.data)['data']);
+        print(response.data);
+        print($token);
+        return profile;
+      } else {
+        throw Exception('Failed to load profile');
+      }
+    } on DioException catch (e) {
+      if (e.response != null && e.response!.statusCode != 200) {
+        debugPrint('Client error - the request cannot be fulfilled');
+        return Profile.fromJson(e.response!.data);
+      }
+      rethrow;
+    } catch (e) {
+      rethrow;
     }
   }
 }

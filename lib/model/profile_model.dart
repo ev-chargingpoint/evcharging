@@ -6,7 +6,7 @@ class Profile{
   final String nomorpolisi;
   final String email;
   final String password;
-  final String confirmpass;
+  final String confirmpassword;
 
   Profile({
     required this.id,
@@ -16,19 +16,19 @@ class Profile{
     required this.nomorpolisi,
     required this.email,
     required this.password,
-    required this.confirmpass,
+    required this.confirmpassword,
   });
 
   factory Profile.fromJson(Map<String, dynamic> json) {
     return Profile(
       id: json['id'] ?? '',
-      namalengkap: json['namalengkap'] ?? '',
+      namalengkap: json['nama_lengkap'] ?? '',
       nomorhp: json['nomorhp'] ?? '',
       namakendaraan: json['namakendaraan'] ?? '',
       nomorpolisi: json['nomorpolisi'] ?? '',
       email: json['email'] ?? '',
       password: json['password'] ?? '',
-      confirmpass: json['confirmpass'] ?? '',
+      confirmpassword: json['confirmpassword'] ?? '',
     );
   }
 }
@@ -70,13 +70,13 @@ class ProfileResponse {
 
       return Profile(
         id: responseData['id'] ?? '',
-        namalengkap: responseData['namalengkap'] ?? '',
+        namalengkap: responseData['nama_lengkap'] ?? '',
         nomorhp: responseData['nomorhp'] ?? '',
         namakendaraan: responseData['namakendaraan'] ?? '',
         nomorpolisi: responseData['nomorpolisi'] ?? '',
         email: responseData['email'] ?? '',
         password: responseData['password'] ?? '',
-        confirmpass: responseData['confirmpass'] ?? '',
+        confirmpassword: responseData['confirmpassword'] ?? '',
       );
     } else {
       // Handle cases where 'data' key is missing in the response

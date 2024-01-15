@@ -1,6 +1,7 @@
 import 'package:evchargingpoint/view/auth/login_screen.dart';
 import 'package:evchargingpoint/view/screen/user/detail_profile.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileMenu extends StatefulWidget {
   const ProfileMenu({Key? key}) : super(key: key);
@@ -42,6 +43,22 @@ void _showLogoutConfirmationDialog(BuildContext context) {
 }
 
 class _ProfileMenuState extends State<ProfileMenu> {
+  String? _namalengkap;
+
+  late SharedPreferences userdata;
+
+  void initState() {
+    super.initState();
+    _fetchUserData();
+  }
+
+  void _fetchUserData() async {
+    userdata = await SharedPreferences.getInstance();
+    setState(() {
+      _namalengkap = userdata.getString('namalengkap').toString();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -54,6 +71,35 @@ class _ProfileMenuState extends State<ProfileMenu> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              Container(
+                width: 130,
+                height: 130,
+                decoration: BoxDecoration(
+                    border: Border.all(width: 4, color: Colors.white),
+                    boxShadow: [
+                      BoxShadow(
+                        spreadRadius: 2,
+                        blurRadius: 10,
+                        color: Colors.black.withOpacity(0.1),
+                      ),
+                    ],
+                    shape: BoxShape.circle,
+                    image: const DecorationImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(
+                          'https://berita.99.co/wp-content/uploads/2023/01/foto-profil-wa-perempuan-aesthetic.jpg'),
+                    )),
+              ),
+              const SizedBox(height: 20),
+              Center(
+                child: Text(
+                  _namalengkap ?? 'Nama Lengkap',
+                  style: const TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
               Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),

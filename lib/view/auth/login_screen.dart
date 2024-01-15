@@ -121,6 +121,8 @@ class _LoginPageState extends State<LoginPage> {
                         // ignore: unrelated_type_equality_checks
                         final prefs = await SharedPreferences.getInstance();
                         final email = prefs.getString('email') ?? '';
+                        final user = await _dataService.getUser();
+                        await AuthManager.getuser(user.namalengkap, user.nomorhp, user.namakendaraan, user.nomorpolisi, user.email, user.password, user.confirmpassword);
                         if (email == 'admin@gmail.com') {
                           // ignore: use_build_context_synchronously
                           Navigator.pushReplacement(
