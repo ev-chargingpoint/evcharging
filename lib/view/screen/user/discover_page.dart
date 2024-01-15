@@ -23,39 +23,6 @@ class _DiscoverPageState extends State<DiscoverPage> {
     chargingStations = apiService.getAllChargingStation();
   }
 
-  void _showLogoutConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: const Text('Konfirmasi Logout'),
-          content: const Text('Anda yakin ingin logout?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-              },
-              child: const Text('Tidak'),
-            ),
-            TextButton(
-              onPressed: () async {
-                await AuthManager.logout();
-// ignore: use_build_context_synchronously
-                Navigator.pushAndRemoveUntil(
-                  dialogContext,
-                  MaterialPageRoute(
-                    builder: (context) => const LoginPage(),
-                  ),
-                  (Route<dynamic> route) => false,
-                );
-              },
-              child: const Text('Ya'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,14 +30,6 @@ class _DiscoverPageState extends State<DiscoverPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
         title: const Text('Charging Station'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              _showLogoutConfirmationDialog(context);
-            },
-            icon: const Icon(Icons.logout),
-          ),
-        ],
       ),
       body: FutureBuilder<List<ChargingStation>>(
         future: chargingStations,

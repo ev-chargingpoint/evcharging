@@ -130,4 +130,64 @@ class ApiServices {
       throw error;
     }
   }
+
+  Future<Map<String, dynamic>> GetProfile(String email) async {
+    try {
+      String? token = await AuthManager.getToken();
+
+      if (token == null) {
+        throw Exception('User not authenticated');
+      }
+
+      Response response = await dio.get(
+        '$_baseUrl/profile/email',
+        options: Options(
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': token,
+          },
+        ),
+      );
+      return json.decode(response.toString());
+    } catch (error) {
+      print('Error in GetProfile: $error');
+      throw error;
+    }
+  }
+
+  Future<Map<String, dynamic>> updateProfile(
+    String id,
+    String namalengkap,
+    String nomorhp,
+    String namakendaraan,
+    String nomorpolisi,
+  ) async {
+    try {
+      String? token = await AuthManager.getToken();
+
+      if (token == null) {
+        throw Exception('User not authenticated');
+      }
+
+      Response response = await dio.put(
+        '$_baseUrl/profile/$id',
+        data: {
+          'namalengkap': namalengkap,
+          'nomorhp': nomorhp,
+          'namakendaraan': namakendaraan,
+          'nomorpolisi': nomorpolisi,
+        },
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token,
+          },
+        ),
+      );
+      return json.decode(response.toString());
+    } catch (error) {
+      print('Error in updateProfile: $error');
+      throw error;
+    }
+  }
 }
