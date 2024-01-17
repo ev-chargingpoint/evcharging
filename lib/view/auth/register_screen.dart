@@ -15,6 +15,10 @@ class _RegisterPageState extends State<RegisterPage> {
   final _emailCtl = TextEditingController();
   final _passwordCtl = TextEditingController();
   final _confirmpassCtl = TextEditingController();
+
+  var _obscureText = true;
+  var _obscureTextCP = true;
+
   @override
   void dispose() {
     _emailCtl.dispose();
@@ -37,6 +41,18 @@ class _RegisterPageState extends State<RegisterPage> {
         backgroundColor: Colors.red,
       ),
     );
+  }
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
+  void _toggleCPasswordVisibility() {
+    setState(() {
+      _obscureTextCP = !_obscureTextCP;
+    });
   }
 
   @override
@@ -73,60 +89,59 @@ class _RegisterPageState extends State<RegisterPage> {
                     prefixIcon: Icon(Icons.email),
                     labelText: 'Email',
                   ),
-                  validator: (value) {
-                    if (value?.isEmpty ?? true) {
-                      return 'Please enter your email';
-                    }
-                    return null;
-                  },
+                  validator: _validateEmail,
                 ),
               ),
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  validator: _validatePassword,
                   controller: _passwordCtl,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    border: UnderlineInputBorder(
+                  obscureText: _obscureText,
+                  decoration: InputDecoration(
+                    border: const UnderlineInputBorder(
                       borderRadius: BorderRadius.all(
                         Radius.circular(10),
                       ),
                     ),
-                    prefixIcon: Icon(Icons.lock),
+                    prefixIcon: const Icon(Icons.lock),
+                    suffixIcon: IconButton(
+                      onPressed: _togglePasswordVisibility,
+                      icon: Icon(
+                        _obscureText ? Icons.visibility : Icons.visibility_off,
+                        color: Colors.grey,
+                      ),
+                    ),
                     labelText: 'Password',
                   ),
-                  validator: (value) {
-                    if (value?.isEmpty ?? true) {
-                      return 'Please enter your password';
-                    }
-                    return null;
-                  },
                 ),
               ),
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  validator: _validateConfirmPassword,
                   controller: _confirmpassCtl,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    border: UnderlineInputBorder(
+                  obscureText: _obscureTextCP,
+                  decoration: InputDecoration(
+                    border: const UnderlineInputBorder(
                       borderRadius: BorderRadius.all(
                         Radius.circular(10),
                       ),
                     ),
-                    prefixIcon: Icon(Icons.lock),
+                    prefixIcon: const Icon(Icons.lock),
+                    suffixIcon: IconButton(
+                      onPressed: _toggleCPasswordVisibility,
+                      icon: Icon(
+                        _obscureTextCP
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Colors.grey,
+                      ),
+                    ),
                     labelText: 'Confirm Password',
                   ),
-                  validator: (value) {
-                    if (value?.isEmpty ?? true) {
-                      return 'Please confirm your password';
-                    } else if (value != _passwordCtl.text) {
-                      return 'Passwords do not match';
-                    }
-                    return null;
-                  },
                 ),
               ),
               const SizedBox(height: 20),
@@ -182,5 +197,35 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
     );
+  }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email is required';
+    }
+    if (!RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
+        .hasMatch(value)) {
+      return 'Invalid email address';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password is required';
+    }
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters long';
+    }
+    return null;
+  }
+
+  String? _validateConfirmPassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please confirm your password';
+    } else if (value != _confirmpassCtl.text) {
+      return 'Passwords do not match';
+    }
+    return null;
   }
 }

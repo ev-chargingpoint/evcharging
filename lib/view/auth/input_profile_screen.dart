@@ -91,6 +91,7 @@ class _InputProfileScreenState extends State<InputProfileScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  validator: _validateName,
                   controller: _namalengkap,
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(
@@ -107,6 +108,7 @@ class _InputProfileScreenState extends State<InputProfileScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  validator: _validatePhoneNumber,
                   controller: _nomorhp,
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(
@@ -116,6 +118,7 @@ class _InputProfileScreenState extends State<InputProfileScreen> {
                     ),
                     prefixIcon: Icon(Icons.phone),
                     labelText: 'Phone Number',
+                    hintText: '08********'
                   ),
                 ),
               ),
@@ -123,6 +126,7 @@ class _InputProfileScreenState extends State<InputProfileScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  validator: _validateCarName,
                   controller: _namakendaraan,
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(
@@ -139,6 +143,7 @@ class _InputProfileScreenState extends State<InputProfileScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  validator: _validatePoliceNumber,
                   controller: _nomorpolisi,
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(
@@ -217,5 +222,58 @@ class _InputProfileScreenState extends State<InputProfileScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
     );
+  }
+
+  String? _validateName(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Name cannot be empty';
+    }
+
+    // Check if the name has at least two words
+    List<String> nameParts = value.split(' ');
+    if (nameParts.length < 2) {
+      return 'Please enter at least two words for the name';
+    }
+
+    return null;
+  }
+
+  String? _validatePhoneNumber(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Phone number cannot be empty';
+    }
+
+    // Check if the phone number starts with '08' and has 9 to 12 digits
+    if (!RegExp(r'^08[0-9]{9,12}$').hasMatch(value)) {
+      return 'Invalid phone number';
+    }
+
+    return null;
+  }
+
+  String? _validateCarName(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Car name cannot be empty';
+    }
+
+    // Check if the car name has at least 3 characters
+    if (value.length < 3) {
+      return 'Please enter at least 3 characters for the car name';
+    }
+
+    return null;
+  }
+
+  String? _validatePoliceNumber(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Police number cannot be empty';
+    }
+
+    // // Check if the police number has at least 2 letters followed by numbers and letters
+    // if (!RegExp(r'^[a-zA-Z]{2}[0-9]+[a-zA-Z]+$').hasMatch(value)) {
+    //   return 'Invalid police number format';
+    // }
+
+    return null;
   }
 }

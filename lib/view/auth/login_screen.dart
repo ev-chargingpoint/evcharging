@@ -66,6 +66,7 @@ class _LoginPageState extends State<LoginPage> {
               child: TextFormField(
                 keyboardType: TextInputType.emailAddress,
                 controller: _emailController,
+                validator: _validateEmail,
                 decoration: const InputDecoration(
                   border: UnderlineInputBorder(
                     borderRadius: BorderRadius.all(
@@ -81,6 +82,7 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                validator: _validatePassword,
                 controller: _passwordController,
                 obscureText: _obscureText,
                 decoration: InputDecoration(
@@ -195,4 +197,26 @@ class _LoginPageState extends State<LoginPage> {
       ))),
     );
   }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email is required';
+    }
+    if (!RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
+        .hasMatch(value)) {
+      return 'Invalid email address';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password is required';
+    }
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters long';
+    }
+    return null;
+  }
+
 }
