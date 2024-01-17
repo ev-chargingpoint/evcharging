@@ -1,9 +1,10 @@
-class Profile{
+class Profile {
   final String id;
   final String namalengkap;
   final String nomorhp;
   final String namakendaraan;
   final String nomorpolisi;
+  final String image;
   final String email;
   final String password;
   final String confirmpassword;
@@ -14,6 +15,7 @@ class Profile{
     required this.nomorhp,
     required this.namakendaraan,
     required this.nomorpolisi,
+    required this.image,
     required this.email,
     required this.password,
     required this.confirmpassword,
@@ -26,6 +28,7 @@ class Profile{
       nomorhp: json['nomorhp'] ?? '',
       namakendaraan: json['namakendaraan'] ?? '',
       nomorpolisi: json['nomorpolisi'] ?? '',
+      image: json['image'] ?? '',
       email: json['email'] ?? '',
       password: json['password'] ?? '',
       confirmpassword: json['confirmpassword'] ?? '',
@@ -46,26 +49,21 @@ class ProfileResponse {
 
   static Profile fromApiResponse(Map<String, dynamic>? apiResponse) {
     if (apiResponse == null) {
-      // Handle null response gracefully, throw an exception or return a default instance
       throw Exception('Null API response');
     }
 
     if (apiResponse.containsKey('status') &&
         apiResponse.containsKey('message')) {
-      // Extract error details from the response
       int status = apiResponse['status'];
       String message = apiResponse['message'];
 
-      // Handle specific error scenarios
       if (status == 400 &&
           message.contains('invalid number of message parts in token')) {
         throw Exception('Invalid number of message parts in token');
       } else {
-        // Handle other error scenarios
         throw Exception('API error: Status $status, Message: $message');
       }
     } else if (apiResponse.containsKey('data')) {
-      // Extract data from the response
       var responseData = apiResponse['data'];
 
       return Profile(
@@ -74,6 +72,7 @@ class ProfileResponse {
         nomorhp: responseData['nomorhp'] ?? '',
         namakendaraan: responseData['namakendaraan'] ?? '',
         nomorpolisi: responseData['nomorpolisi'] ?? '',
+        image: responseData['image'] ?? '',
         email: responseData['email'] ?? '',
         password: responseData['password'] ?? '',
         confirmpassword: responseData['confirmpassword'] ?? '',

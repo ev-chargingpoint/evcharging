@@ -1,10 +1,11 @@
+import 'package:evchargingpoint/view/screen/admin/edit_chargingstation.dart';
+import 'package:flutter/material.dart';
 import 'package:evchargingpoint/model/chargingstation_model.dart';
 import 'package:evchargingpoint/service/api_sevices.dart';
 import 'package:evchargingpoint/service/auth_manager.dart';
 import 'package:evchargingpoint/view/auth/login_screen.dart';
 import 'package:evchargingpoint/view/screen/admin/add_chargingstation.dart';
 import 'package:evchargingpoint/view/screen/user/detail_chargingstation.dart';
-import 'package:flutter/material.dart';
 
 class HomeAdmin extends StatefulWidget {
   const HomeAdmin({Key? key}) : super(key: key);
@@ -46,7 +47,6 @@ class _HomeAdminState extends State<HomeAdmin> {
             TextButton(
               onPressed: () async {
                 await AuthManager.logout();
-// ignore: use_build_context_synchronously
                 Navigator.pushAndRemoveUntil(
                   dialogContext,
                   MaterialPageRoute(
@@ -126,8 +126,8 @@ class _HomeAdminState extends State<HomeAdmin> {
                             ),
                             child: Container(
                               constraints: const BoxConstraints(
-                                minHeight: 100.0,
-                                maxHeight: 100.0,
+                                minHeight: 95.0,
+                                maxHeight: 95.0,
                               ),
                               child: AspectRatio(
                                 aspectRatio: 1,
@@ -149,7 +149,7 @@ class _HomeAdminState extends State<HomeAdmin> {
                                     data[index].nama,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 19),
+                                        fontSize: 18),
                                   ),
                                   const SizedBox(height: 5),
                                   Row(
@@ -167,6 +167,30 @@ class _HomeAdminState extends State<HomeAdmin> {
                               ),
                             ),
                           ),
+                          // Edit Button
+                          Column(
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.edit, color: Colors.blue),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => EditChargingStation(
+                                        chargingStation: data[index],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.delete, color: Colors.red),
+                                onPressed: () {
+                                  // Add your delete functionality here
+                                },
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     ),
@@ -178,8 +202,6 @@ class _HomeAdminState extends State<HomeAdmin> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            // Navigate to the Add Charging Station page
-            // You can replace AddChargingStationPage with the actual page name
             Navigator.push(
               context,
               MaterialPageRoute(

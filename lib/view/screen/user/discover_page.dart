@@ -1,7 +1,5 @@
 import 'package:evchargingpoint/model/chargingstation_model.dart';
 import 'package:evchargingpoint/service/api_sevices.dart';
-import 'package:evchargingpoint/service/auth_manager.dart';
-import 'package:evchargingpoint/view/auth/login_screen.dart';
 import 'package:evchargingpoint/view/screen/user/detail_chargingstation.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +20,6 @@ class _DiscoverPageState extends State<DiscoverPage> {
     super.initState();
     chargingStations = apiService.getAllChargingStation();
   }
-
 
   @override
   Widget build(BuildContext context) {

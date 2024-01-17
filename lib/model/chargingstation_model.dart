@@ -31,7 +31,7 @@ class ChargingStation {
 
   factory ChargingStation.fromJson(Map<String, dynamic> json) {
     return ChargingStation(
-      id: json['id'] ?? '',
+      id: json['_id'] ?? '',
       chargingkode: json['chargingkode'] ?? '',
       nama: json['nama'] ?? '',
       alamat: json['alamat'] ?? '',
@@ -84,7 +84,7 @@ class ChargingStationResponse {
       var responseData = apiResponse['data'];
 
       return ChargingStation(
-        id: responseData['id'] ?? '',
+        id: responseData['_id'] ?? '',
         chargingkode: responseData['chargingkode'] ?? '',
         nama: responseData['nama'] ?? '',
         alamat: responseData['alamat'] ?? '',

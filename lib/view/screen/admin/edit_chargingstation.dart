@@ -1,20 +1,25 @@
 import 'dart:io';
+
+import 'package:evchargingpoint/model/chargingstation_model.dart';
+import 'package:evchargingpoint/service/api_sevices.dart';
 import 'package:evchargingpoint/service/auth_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:evchargingpoint/service/api_sevices.dart';
+import 'package:image_picker/image_picker.dart';
 
-class AddChargingStation extends StatefulWidget {
-  const AddChargingStation({super.key});
+class EditChargingStation extends StatefulWidget {
+  final ChargingStation chargingStation;
+  const EditChargingStation({Key? key, required this.chargingStation})
+      : super(key: key);
 
   @override
-  State<AddChargingStation> createState() => _AddChargingStationState();
+  State<EditChargingStation> createState() => _EditChargingStationState();
 }
 
-class _AddChargingStationState extends State<AddChargingStation> {
+class _EditChargingStationState extends State<EditChargingStation> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   File? _selectedImage;
+  late String _imageFile;
   final _namaCtl = TextEditingController();
   final _kodeCtl = TextEditingController();
   final _alamatCtl = TextEditingController();
@@ -26,32 +31,46 @@ class _AddChargingStationState extends State<AddChargingStation> {
   final _jamoperasional = TextEditingController();
   final _latitudeCtl = TextEditingController();
   final _longitudeCtl = TextEditingController();
+  final _idCtl = TextEditingController();
 
   late GoogleMapController _mapController;
-  LatLng _selectedLatLng = const LatLng(-6.902269122629447, 107.61873398154628);
+  LatLng _selectedLatLng = LatLng(0, 0);
 
-  void _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) {
-        _selectedImage = File(pickedFile.path);
-      }
-    });
+  @override
+  void initState() {
+    super.initState();
+    _populateFields();
   }
 
-  void _postChargingStation() async {
+  void _populateFields() {
+    double latitude = double.parse(widget.chargingStation.latitude);
+    double longitude = double.parse(widget.chargingStation.longitude);
+    _imageFile = widget.chargingStation.image!;
+    _idCtl.text = widget.chargingStation.id;
+    _namaCtl.text = widget.chargingStation.nama;
+    _kodeCtl.text = widget.chargingStation.chargingkode;
+    _alamatCtl.text = widget.chargingStation.alamat;
+    _nomorCtl.text = widget.chargingStation.nomortelepon;
+    _jumlahCtl.text = widget.chargingStation.ammountplugs;
+    _dayaCtl.text = widget.chargingStation.daya;
+    _tipeCtl.text = widget.chargingStation.connector;
+    _hargaCtl.text = widget.chargingStation.harga;
+    _jamoperasional.text = widget.chargingStation.jamoperasional;
+    _longitudeCtl.text = longitude.toString();
+    _latitudeCtl.text = latitude.toString();
+    _selectedLatLng = LatLng(latitude, longitude);
+  }
+
+  void _putCharging() async {
     try {
       String? token = await AuthManager.getToken();
 
       if (token == null) {
         return;
       }
-
       ApiServices apiService = ApiServices();
 
-      Map<String, dynamic> postData = {
+      Map<String, dynamic> putData = {
         'nama': _namaCtl.text,
         'chargingkode': _kodeCtl.text,
         'alamat': _alamatCtl.text,
@@ -63,41 +82,38 @@ class _AddChargingStationState extends State<AddChargingStation> {
         'jamoperasional': _jamoperasional.text,
         'latitude': _latitudeCtl.text,
         'longitude': _longitudeCtl.text,
-        'image': _selectedImage,
+        'image': _selectedImage != null ? _selectedImage! : _imageFile,
       };
 
-      if (_selectedImage == null || !await _selectedImage!.exists()) {
-        throw Exception('Image file does not exist');
-      }
+      print('Update Charging Station: $putData');
 
-      print('Posting Charging Station: $postData');
-
-      Map<String, dynamic> apiResponse = await apiService.postChargingStation(
-        nama: postData['nama'],
-        chargingkode: postData['chargingkode'],
-        alamat: postData['alamat'],
-        nomortelepon: postData['nomortelepon'],
-        ammountplugs: postData['ammountplugs'],
-        daya: postData['daya'],
-        connector: postData['connector'],
-        harga: postData['harga'],
-        latitude: postData['latitude'],
-        longitude: postData['longitude'],
-        jamoperasional: postData['jamoperasional'],
-        image: postData['image'],
+      Map<String, dynamic> apiResponse = await apiService.putChargingStation(
+        id: widget.chargingStation.id,
+        nama: putData['nama'],
+        chargingkode: putData['chargingkode'],
+        alamat: putData['alamat'],
+        nomortelepon: putData['nomortelepon'],
+        ammountplugs: putData['ammountplugs'],
+        daya: putData['daya'],
+        connector: putData['connector'],
+        harga: putData['harga'],
+        latitude: putData['latitude'],
+        longitude: putData['longitude'],
+        jamoperasional: putData['jamoperasional'],
+        image: putData['image'],
       );
 
       print('API Response: $apiResponse');
 
       if (apiResponse['status'] == 201) {
         _showSuccessAlert(
-            'Successfully posted Charging Station: ${apiResponse['message']}');
+            'Successfully update Charging Station: ${apiResponse['message']}');
       } else {
         _showErrorAlert(
-            'Failed to post Charging Station: ${apiResponse['message']}');
+            'Failed to update Charging Station: ${apiResponse['message']}');
       }
     } catch (error) {
-      print('Error posting Charging Station: $error');
+      print('Error update Charging Station: $error');
       _showErrorAlert('FAIL: $error');
     }
   }
@@ -142,18 +158,28 @@ class _AddChargingStationState extends State<AddChargingStation> {
     );
   }
 
+  void _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _selectedImage = File(pickedFile.path);
+      } else {
+        _selectedImage = null;
+      }
+    });
+  }
+
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
   }
-
-  bool _isMarkerVisible = false;
 
   void _onMapTap(LatLng latLng) {
     setState(() {
       _selectedLatLng = latLng;
       _latitudeCtl.text = latLng.latitude.toString();
       _longitudeCtl.text = latLng.longitude.toString();
-      _isMarkerVisible = true;
     });
   }
 
@@ -359,16 +385,23 @@ class _AddChargingStationState extends State<AddChargingStation> {
                         ),
                       ),
                     ),
-                    _selectedImage != null
+                    widget.chargingStation.image != null ||
+                            _selectedImage != null
                         ? Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 16.0, vertical: 10.0),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10.0),
-                              child: Image.file(_selectedImage!),
+                              child: _selectedImage != null
+                                  ? Image.file(_selectedImage!)
+                                  : Image.network(
+                                      widget.chargingStation.image!),
                             ),
                           )
-                        : const SizedBox.shrink(),
+                        : ElevatedButton(
+                            onPressed: _pickImage,
+                            child: const Text('Please select an image'),
+                          ),
                     const SizedBox(height: 10),
                   ],
                 ),
@@ -387,22 +420,6 @@ class _AddChargingStationState extends State<AddChargingStation> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
-                    controller: _longitudeCtl,
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      prefixIcon: Icon(Icons.location_on),
-                      labelText: 'Longitude (°)',
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
                     controller: _latitudeCtl,
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(
@@ -412,6 +429,22 @@ class _AddChargingStationState extends State<AddChargingStation> {
                       ),
                       prefixIcon: Icon(Icons.location_on),
                       labelText: 'Latitude (°)',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    controller: _longitudeCtl,
+                    decoration: const InputDecoration(
+                      border: UnderlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                      ),
+                      prefixIcon: Icon(Icons.location_on),
+                      labelText: 'Longitude (°)',
                     ),
                   ),
                 ),
@@ -425,17 +458,15 @@ class _AddChargingStationState extends State<AddChargingStation> {
                       target: _selectedLatLng,
                       zoom: 13,
                     ),
-                    markers: _isMarkerVisible
-                        ? {
-                            Marker(
-                              markerId: const MarkerId('selectedLocation'),
-                              position: _selectedLatLng,
-                              icon: BitmapDescriptor.defaultMarkerWithHue(
-                                BitmapDescriptor.hueBlue,
-                              ),
-                            ),
-                          }
-                        : {},
+                    markers: {
+                      Marker(
+                        markerId: const MarkerId('selectedLocation'),
+                        position: _selectedLatLng,
+                        icon: BitmapDescriptor.defaultMarkerWithHue(
+                          BitmapDescriptor.hueBlue,
+                        ),
+                      ),
+                    },
                   ),
                 )
               ],
@@ -447,7 +478,7 @@ class _AddChargingStationState extends State<AddChargingStation> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
           child: ElevatedButton(
-            onPressed: _postChargingStation,
+            onPressed: _putCharging,
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).primaryColor,
               padding: const EdgeInsets.all(16.0),
@@ -455,7 +486,7 @@ class _AddChargingStationState extends State<AddChargingStation> {
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            child: const Text('Submit'),
+            child: const Text('Save'),
           ),
         ),
       ),

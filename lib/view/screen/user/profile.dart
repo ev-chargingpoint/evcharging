@@ -1,5 +1,6 @@
 import 'package:evchargingpoint/view/auth/login_screen.dart';
 import 'package:evchargingpoint/view/screen/user/detail_profile.dart';
+import 'package:evchargingpoint/view/screen/user/edit_password.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -120,7 +121,13 @@ class _ProfileMenuState extends State<ProfileMenu> {
                           const Icon(Icons.arrow_forward_ios_rounded, size: 20),
                     ),
                     ListTile(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const EditPass()),
+                        );
+                      },
                       leading: const Icon(Icons.lock),
                       title: const Text('Change Password'),
                       trailing:

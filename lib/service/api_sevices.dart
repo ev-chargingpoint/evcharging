@@ -20,6 +20,7 @@ class ApiServices {
       Response response = await dio.get('$_baseUrl/chargingstation');
       if (response.statusCode == 200) {
         List<dynamic> data = jsonDecode(response.data);
+        print('Data: $data');
         final chargingStations =
             data.map((item) => ChargingStation.fromJson(item)).toList();
         return chargingStations;
@@ -133,11 +134,106 @@ class ApiServices {
     }
   }
 
+  Future<Map<String, dynamic>> putChargingStation({
+    required String id,
+    required String chargingkode,
+    required String nama,
+    required String alamat,
+    required String ammountplugs,
+    required String daya,
+    required String connector,
+    required String harga,
+    required String nomortelepon,
+    required String jamoperasional,
+    required String longitude,
+    required String latitude,
+    required File image,
+  }) async {
+    try {
+      String? token = await AuthManager.getToken();
+
+      if (token == null) {
+        throw Exception('User not authenticated');
+      }
+
+      FormData formData = FormData.fromMap({
+        'chargingkode': chargingkode,
+        'nama': nama,
+        'alamat': alamat,
+        'ammountplugs': ammountplugs,
+        'daya': daya,
+        'connector': connector,
+        'harga': harga,
+        'nomortelepon': nomortelepon,
+        'jamoperasional': jamoperasional,
+        'longitude': longitude,
+        'latitude': latitude,
+        'file': await MultipartFile.fromFile(image.path),
+      });
+
+      Response response = await dio.put(
+        '$_baseUrl/chargingstation?id=$id',
+        data: formData,
+        options: Options(
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': token,
+          },
+        ),
+      );
+      // print('ID: $id');
+      return json.decode(response.toString());
+    } catch (error) {
+      print('Error in putChargingStation: $error');
+      throw error;
+    }
+  }
+
+  Future<Map<String, dynamic>> putProfile({
+    String id = '',
+    required String namalengkap,
+    required String nomorhp,
+    required String namakendaraan,
+    required String nomorpolisi,
+    required File image,
+  }) async {
+    try {
+      String? token = await AuthManager.getToken();
+
+      if (token == null) {
+        throw Exception('User not authenticated');
+      }
+
+      FormData formData = FormData.fromMap({
+        'namalengkap': namalengkap,
+        'nomorhp': nomorhp,
+        'namakendaraan': namakendaraan,
+        'nomorpolisi': nomorpolisi,
+        'file': await MultipartFile.fromFile(image.path),
+      });
+
+      Response response = await dio.put(
+        '$_baseUrl/profile-evcharging?id=$id',
+        data: formData,
+        options: Options(
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': token,
+          },
+        ),
+      );
+
+      return json.decode(response.toString());
+    } catch (error) {
+      print('Error in putProfile: $error');
+      throw error;
+    }
+  }
+
   Future<Profile> getUser() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? $token = prefs.getString('token');
-      // String? token = await AuthManager.getToken();
 
       if ($token == null) {
         throw Exception('User not authenticated');
@@ -145,56 +241,6 @@ class ApiServices {
 
       final response = await dio.get(
         '$_baseUrl/profile-evcharging',
-        options: Options(
-          headers: {
-            'Authorization': $token,
-          },
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        final profile = Profile.fromJson(jsonDecode(response.data)['data']);
-        print(response.data);
-        print($token);
-        return profile;
-      } else {
-        throw Exception('Failed to load profile');
-      }
-    } on DioException catch (e) {
-      if (e.response != null && e.response!.statusCode != 200) {
-        debugPrint('Client error - the request cannot be fulfilled');
-        return Profile.fromJson(e.response!.data);
-      }
-      rethrow;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  Future<Profile> putProfile(
-    String text, {
-    required String namalengkap,
-    required String nomorhp,
-    required String namakendaraan,
-    required String nomorpolisi,
-  }) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? $token = prefs.getString('token');
-      // String? token = await AuthManager.getToken();
-
-      if ($token == null) {
-        throw Exception('User not authenticated');
-      }
-
-      final response = await dio.put(
-        '$_baseUrl/profile-evcharging',
-        data: {
-          'namalengkap': namalengkap,
-          'nomorhp': nomorhp,
-          'namakendaraan': namakendaraan,
-          'nomorpolisi': nomorpolisi,
-        },
         options: Options(
           headers: {
             'Authorization': $token,
