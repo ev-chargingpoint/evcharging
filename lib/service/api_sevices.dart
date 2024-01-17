@@ -195,6 +195,30 @@ class ApiServices {
     }
   }
 
+  Future deleteStation(String id) async {
+    try {
+      String? token = await AuthManager.getToken();
+
+      if (token == null) {
+        throw Exception('User not authenticated');
+      }
+
+      Response response = await dio.delete(
+        '$_baseUrl/chargingstation?id=$id',
+        options: Options(
+          headers: {
+            'Authorization': token,
+          },
+        ),
+      );
+      return json.decode(response.toString());
+    } catch (error) {
+      print('Error in deleteStation: $error');
+      throw error;
+    }
+  }
+
+
   Future<Map<String, dynamic>> putProfile({
     String id = '',
     required String namalengkap,

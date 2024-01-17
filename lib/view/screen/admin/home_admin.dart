@@ -186,7 +186,36 @@ class _HomeAdminState extends State<HomeAdmin> {
                               IconButton(
                                 icon: Icon(Icons.delete, color: Colors.red),
                                 onPressed: () {
-                                  // Add your delete functionality here
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext dialogContext) {
+                                      return AlertDialog(
+                                        title: const Text(
+                                            'Konfirmasi Delete'),
+                                        content: const Text(
+                                            'Anda yakin ingin menghapus data ini?'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(dialogContext)
+                                                  .pop();
+                                            },
+                                            child: const Text('Tidak'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () async {
+                                              await apiService.deleteStation(
+                                                  data[index].id.toString());
+                                              Navigator.of(dialogContext)
+                                                  .pop();
+                                              _refresh();
+                                            },
+                                            child: const Text('Ya'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
                                 },
                               ),
                             ],
