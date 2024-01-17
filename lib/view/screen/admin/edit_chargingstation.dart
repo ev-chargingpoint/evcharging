@@ -105,7 +105,7 @@ class _EditChargingStationState extends State<EditChargingStation> {
 
       print('API Response: $apiResponse');
 
-      if (apiResponse['status'] == 201) {
+      if (apiResponse['status'] == 200) {
         _showSuccessAlert(
             'Successfully update Charging Station: ${apiResponse['message']}');
       } else {

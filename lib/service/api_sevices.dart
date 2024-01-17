@@ -147,13 +147,20 @@ class ApiServices {
     required String jamoperasional,
     required String longitude,
     required String latitude,
-    required File image,
+    required dynamic image,
   }) async {
     try {
       String? token = await AuthManager.getToken();
 
       if (token == null) {
         throw Exception('User not authenticated');
+      }
+
+      MultipartFile? imageFile;
+      if (image is File) {
+        imageFile = await MultipartFile.fromFile(image.path);
+      } else if (image is String) {
+        imageFile = MultipartFile.fromString(image);
       }
 
       FormData formData = FormData.fromMap({
@@ -168,7 +175,7 @@ class ApiServices {
         'jamoperasional': jamoperasional,
         'longitude': longitude,
         'latitude': latitude,
-        'file': await MultipartFile.fromFile(image.path),
+        'file': imageFile,
       });
 
       Response response = await dio.put(
@@ -181,7 +188,6 @@ class ApiServices {
           },
         ),
       );
-      // print('ID: $id');
       return json.decode(response.toString());
     } catch (error) {
       print('Error in putChargingStation: $error');
