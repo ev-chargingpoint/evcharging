@@ -136,17 +136,18 @@ class _LoginPageState extends State<LoginPage> {
                             user.image);
                         if (email == 'admin@gmail.com') {
                           // ignore: use_build_context_synchronously
-                          Navigator.pushReplacement(
+                          Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const HomeAdmin()),
+                                builder: (context) => const HomeAdmin()),((route) => false)
+                                
                           );
                         } else {
                           // ignore: use_build_context_synchronously
-                          Navigator.pushReplacement(
+                          Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const BottomNavbar()),
+                                builder: (context) => const BottomNavbar()),((route) => false)
                           );
                         }
                       } else {
