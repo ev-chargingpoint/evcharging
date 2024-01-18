@@ -227,7 +227,7 @@ class _RegisterPageState extends State<RegisterPage> {
   String? _validateConfirmPassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please confirm your password';
-    } else if (value != _confirmpassCtl.text) {
+    } else if (value != _passwordCtl.text) {
       return 'Passwords do not match';
     }
     return null;

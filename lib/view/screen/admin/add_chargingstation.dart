@@ -184,6 +184,7 @@ class _AddChargingStationState extends State<AddChargingStation> {
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     controller: _namaCtl,
+                    validator: _validate,
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(
                         borderRadius: BorderRadius.all(
@@ -198,6 +199,7 @@ class _AddChargingStationState extends State<AddChargingStation> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    validator: _validate,
                     controller: _kodeCtl,
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(
@@ -214,6 +216,7 @@ class _AddChargingStationState extends State<AddChargingStation> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    validator: _validate,
                     controller: _alamatCtl,
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(
@@ -261,6 +264,8 @@ class _AddChargingStationState extends State<AddChargingStation> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    validator: _validate,
+                    keyboardType: TextInputType.datetime,
                     controller: _jamoperasional,
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(
@@ -276,6 +281,7 @@ class _AddChargingStationState extends State<AddChargingStation> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    validator: _validate,
                     keyboardType: TextInputType.number,
                     controller: _jumlahCtl,
                     decoration: const InputDecoration(
@@ -293,6 +299,8 @@ class _AddChargingStationState extends State<AddChargingStation> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    validator: _validate,
+                    keyboardType: TextInputType.number,
                     controller: _dayaCtl,
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(
@@ -309,6 +317,8 @@ class _AddChargingStationState extends State<AddChargingStation> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    validator: _validate,
+                    keyboardType: TextInputType.text,
                     controller: _tipeCtl,
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(
@@ -325,6 +335,8 @@ class _AddChargingStationState extends State<AddChargingStation> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    validator: _validate,
+                    keyboardType: TextInputType.number,
                     controller: _hargaCtl,
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(
@@ -487,6 +499,14 @@ String? _validatePhoneNumber(String? value) {
     // Check if the phone number starts with '08' and has 9 to 12 digits
     if (!RegExp(r'^08[0-9]{9,12}$').hasMatch(value)) {
       return 'Invalid phone number';
+    }
+
+    return null;
+  }
+
+  String? _validate(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Field cannot be empty';
     }
 
     return null;

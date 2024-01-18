@@ -108,6 +108,7 @@ class _InputProfileScreenState extends State<InputProfileScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  keyboardType: TextInputType.phone,
                   validator: _validatePhoneNumber,
                   controller: _nomorhp,
                   decoration: const InputDecoration(
@@ -188,6 +189,7 @@ class _InputProfileScreenState extends State<InputProfileScreen> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(res.message),
+                              backgroundColor: Colors.red,
                             ),
                           );
                         }

@@ -209,6 +209,7 @@ class _EditChargingStationState extends State<EditChargingStation> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    validator: _validate,
                     controller: _namaCtl,
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(
@@ -221,9 +222,10 @@ class _EditChargingStationState extends State<EditChargingStation> {
                     ),
                   ),
                 ),
-                Padding(
+                Padding(  
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    validator: _validate,
                     controller: _kodeCtl,
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(
@@ -240,6 +242,7 @@ class _EditChargingStationState extends State<EditChargingStation> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    validator: _validate,
                     controller: _alamatCtl,
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(
@@ -256,6 +259,7 @@ class _EditChargingStationState extends State<EditChargingStation> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    validator: _validatePhoneNumber,
                     keyboardType: TextInputType.phone,
                     controller: _nomorCtl,
                     decoration: const InputDecoration(
@@ -285,6 +289,8 @@ class _EditChargingStationState extends State<EditChargingStation> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    keyboardType: TextInputType.datetime,
+                    validator: _validate,
                     controller: _jamoperasional,
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(
@@ -301,6 +307,7 @@ class _EditChargingStationState extends State<EditChargingStation> {
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     keyboardType: TextInputType.number,
+                    validator: _validate,
                     controller: _jumlahCtl,
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(
@@ -317,6 +324,8 @@ class _EditChargingStationState extends State<EditChargingStation> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    validator: _validate,
                     controller: _dayaCtl,
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(
@@ -333,6 +342,7 @@ class _EditChargingStationState extends State<EditChargingStation> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    validator: _validate,
                     controller: _tipeCtl,
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(
@@ -349,6 +359,8 @@ class _EditChargingStationState extends State<EditChargingStation> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    validator: _validate,
                     controller: _hargaCtl,
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(
@@ -507,4 +519,26 @@ class _EditChargingStationState extends State<EditChargingStation> {
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
     );
   }
+
+  String? _validatePhoneNumber(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Phone number cannot be empty';
+    }
+
+    // Check if the phone number starts with '08' and has 9 to 12 digits
+    if (!RegExp(r'^08[0-9]{9,12}$').hasMatch(value)) {
+      return 'Invalid phone number';
+    }
+
+    return null;
+  }
+
+  String? _validate(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Field cannot be empty';
+    }
+
+    return null;
+  }
+
 }
