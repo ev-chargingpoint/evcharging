@@ -211,13 +211,17 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Password is required';
-    }
-    if (value.length < 6) {
-      return 'Password must be at least 6 characters long';
-    }
-    return null;
+    return (value == null || value.isEmpty)
+        ? 'Password is required'
+        : (value.length < 8)
+            ? 'Password must be at least 8 characters long'
+            : (!value.contains(RegExp(r'[A-Z]')))
+                ? 'Password must contain at least one uppercase letter'
+                : (!value.contains(RegExp(r'[a-z]')))
+                    ? 'Password must contain at least one lowercase letter'
+                    : (!value.contains(RegExp(r'[0-9]')))
+                        ? 'Password must contain at least one number'
+                        : null;
   }
 
   String? _validateConfirmPassword(String? value) {

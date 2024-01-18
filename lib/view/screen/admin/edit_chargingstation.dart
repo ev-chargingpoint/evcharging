@@ -256,6 +256,7 @@ class _EditChargingStationState extends State<EditChargingStation> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    keyboardType: TextInputType.phone,
                     controller: _nomorCtl,
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(
@@ -299,6 +300,7 @@ class _EditChargingStationState extends State<EditChargingStation> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
                     controller: _jumlahCtl,
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(

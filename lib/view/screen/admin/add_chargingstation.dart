@@ -230,6 +230,7 @@ class _AddChargingStationState extends State<AddChargingStation> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    keyboardType: TextInputType.phone,
                     controller: _nomorCtl,
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(
@@ -239,7 +240,9 @@ class _AddChargingStationState extends State<AddChargingStation> {
                       ),
                       prefixIcon: Icon(Icons.phone),
                       labelText: 'Nomor Telepon',
+                      hintText: '08********',
                     ),
+                    validator: _validatePhoneNumber,
                   ),
                 ),
                 const SizedBox(height: 5),
@@ -273,6 +276,7 @@ class _AddChargingStationState extends State<AddChargingStation> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
                     controller: _jumlahCtl,
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(
@@ -474,4 +478,18 @@ class _AddChargingStationState extends State<AddChargingStation> {
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
     );
   }
+
+String? _validatePhoneNumber(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Phone number cannot be empty';
+    }
+
+    // Check if the phone number starts with '08' and has 9 to 12 digits
+    if (!RegExp(r'^08[0-9]{9,12}$').hasMatch(value)) {
+      return 'Invalid phone number';
+    }
+
+    return null;
+  }
+
 }
