@@ -79,6 +79,7 @@ class _RegisterPageState extends State<RegisterPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  keyboardType: TextInputType.emailAddress,
                   controller: _emailCtl,
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(

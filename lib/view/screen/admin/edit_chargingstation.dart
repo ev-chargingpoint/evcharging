@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:evchargingpoint/model/chargingstation_model.dart';
 import 'package:evchargingpoint/service/api_sevices.dart';
 import 'package:evchargingpoint/service/auth_manager.dart';
+import 'package:evchargingpoint/view/screen/admin/home_admin.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -125,10 +126,17 @@ class _EditChargingStationState extends State<EditChargingStation> {
         return AlertDialog(
           title: Text("Success"),
           content: Text(message),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomeAdmin(),
+                    ));
               },
               child: Text("OK"),
             ),
@@ -145,6 +153,9 @@ class _EditChargingStationState extends State<EditChargingStation> {
         return AlertDialog(
           title: Text("Error"),
           content: Text(message),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -222,7 +233,7 @@ class _EditChargingStationState extends State<EditChargingStation> {
                     ),
                   ),
                 ),
-                Padding(  
+                Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     validator: _validate,
@@ -463,7 +474,7 @@ class _EditChargingStationState extends State<EditChargingStation> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                Container(
+                SizedBox(
                   height: 300,
                   child: GoogleMap(
                     onMapCreated: _onMapCreated,
@@ -481,6 +492,7 @@ class _EditChargingStationState extends State<EditChargingStation> {
                         ),
                       ),
                     },
+                    scrollGesturesEnabled: true,
                   ),
                 )
               ],
@@ -540,5 +552,4 @@ class _EditChargingStationState extends State<EditChargingStation> {
 
     return null;
   }
-
 }

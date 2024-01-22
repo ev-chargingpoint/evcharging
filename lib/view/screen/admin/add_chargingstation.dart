@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:evchargingpoint/service/auth_manager.dart';
+import 'package:evchargingpoint/view/screen/admin/home_admin.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -109,10 +110,17 @@ class _AddChargingStationState extends State<AddChargingStation> {
         return AlertDialog(
           title: Text("Success"),
           content: Text(message),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomeAdmin(),
+                    ));
               },
               child: Text("OK"),
             ),
@@ -129,6 +137,9 @@ class _AddChargingStationState extends State<AddChargingStation> {
         return AlertDialog(
           title: Text("Error"),
           content: Text(message),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -452,6 +463,7 @@ class _AddChargingStationState extends State<AddChargingStation> {
                             ),
                           }
                         : {},
+                    scrollGesturesEnabled: true,
                   ),
                 )
               ],
@@ -491,7 +503,7 @@ class _AddChargingStationState extends State<AddChargingStation> {
     );
   }
 
-String? _validatePhoneNumber(String? value) {
+  String? _validatePhoneNumber(String? value) {
     if (value == null || value.isEmpty) {
       return 'Phone number cannot be empty';
     }
@@ -511,5 +523,4 @@ String? _validatePhoneNumber(String? value) {
 
     return null;
   }
-
 }

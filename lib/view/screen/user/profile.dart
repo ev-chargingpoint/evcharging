@@ -18,6 +18,9 @@ void _showLogoutConfirmationDialog(BuildContext context) {
       return AlertDialog(
         title: const Text('Konfirmasi Logout'),
         content: const Text('Anda yakin ingin logout?'),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
         actions: <Widget>[
           TextButton(
             onPressed: () {

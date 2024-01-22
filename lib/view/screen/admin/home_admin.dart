@@ -37,6 +37,9 @@ class _HomeAdminState extends State<HomeAdmin> {
         return AlertDialog(
           title: const Text('Konfirmasi Logout'),
           content: const Text('Anda yakin ingin logout?'),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -47,6 +50,7 @@ class _HomeAdminState extends State<HomeAdmin> {
             TextButton(
               onPressed: () async {
                 await AuthManager.logout();
+                // ignore: use_build_context_synchronously
                 Navigator.pushAndRemoveUntil(
                   dialogContext,
                   MaterialPageRoute(
@@ -153,6 +157,8 @@ class _HomeAdminState extends State<HomeAdmin> {
                                   ),
                                   const SizedBox(height: 5),
                                   Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
                                       const Icon(
                                         Icons.location_on,
@@ -160,7 +166,12 @@ class _HomeAdminState extends State<HomeAdmin> {
                                         color: Colors.green,
                                       ),
                                       const SizedBox(width: 5),
-                                      Text(data[index].alamat),
+                                      Expanded(
+                                        child: Text(
+                                          data[index].alamat,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ],
@@ -171,7 +182,8 @@ class _HomeAdminState extends State<HomeAdmin> {
                           Column(
                             children: [
                               IconButton(
-                                icon: Icon(Icons.edit, color: Colors.blue),
+                                icon:
+                                    const Icon(Icons.edit, color: Colors.blue),
                                 onPressed: () {
                                   Navigator.push(
                                     context,
@@ -184,21 +196,20 @@ class _HomeAdminState extends State<HomeAdmin> {
                                 },
                               ),
                               IconButton(
-                                icon: Icon(Icons.delete, color: Colors.red),
+                                icon:
+                                    const Icon(Icons.delete, color: Colors.red),
                                 onPressed: () {
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext dialogContext) {
                                       return AlertDialog(
-                                        title: const Text(
-                                            'Konfirmasi Delete'),
+                                        title: const Text('Konfirmasi Delete'),
                                         content: const Text(
                                             'Anda yakin ingin menghapus data ini?'),
                                         actions: <Widget>[
                                           TextButton(
                                             onPressed: () {
-                                              Navigator.of(dialogContext)
-                                                  .pop();
+                                              Navigator.of(dialogContext).pop();
                                             },
                                             child: const Text('Tidak'),
                                           ),
@@ -206,8 +217,8 @@ class _HomeAdminState extends State<HomeAdmin> {
                                             onPressed: () async {
                                               await apiService.deleteStation(
                                                   data[index].id.toString());
-                                              Navigator.of(dialogContext)
-                                                  .pop();
+                                              // ignore: use_build_context_synchronously
+                                              Navigator.of(dialogContext).pop();
                                               _refresh();
                                             },
                                             child: const Text('Ya'),
@@ -234,14 +245,15 @@ class _HomeAdminState extends State<HomeAdmin> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => AddChargingStation(),
+                builder: (context) => const AddChargingStation(),
               ),
             );
           },
-          child: const Icon(Icons.add, color: Colors.white),
           backgroundColor: Theme.of(context).primaryColor,
+          child: const Icon(Icons.add, color: Colors.white),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.miniCenterFloat,
       ),
     );
   }

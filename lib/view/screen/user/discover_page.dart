@@ -21,139 +21,150 @@ class _DiscoverPageState extends State<DiscoverPage> {
     chargingStations = apiService.getAllChargingStation();
   }
 
+  Future<void> _refresh() async {
+    setState(() {
+      chargingStations = apiService.getAllChargingStation();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        title: const Text('Charging Station'),
-      ),
-      body: FutureBuilder<List<ChargingStation>>(
-        future: chargingStations,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(
-                color: Theme.of(context).primaryColor,
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text('No data available'),
-            );
-          } else {
-            List<ChargingStation> data = snapshot.data!;
-            return ListView.builder(
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChargingStationDetailPage(
-                            chargingStation: data[index]),
+    return RefreshIndicator(
+      onRefresh: _refresh,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          title: const Text('Charging Station'),
+        ),
+        body: FutureBuilder<List<ChargingStation>>(
+          future: chargingStations,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor,
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
+              );
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(
+                child: Text('No data available'),
+              );
+            } else {
+              List<ChargingStation> data = snapshot.data!;
+              return ListView.builder(
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChargingStationDetailPage(
+                              chargingStation: data[index]),
+                        ),
+                      );
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
-                    );
-                  },
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    margin: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: <Widget>[
-                        ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(10.0),
-                            bottomLeft: Radius.circular(10.0),
-                          ),
-                          child: Container(
-                            constraints: const BoxConstraints(
-                              minHeight: 100.0,
-                              maxHeight: 130.0,
+                      margin: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(10.0),
+                              bottomLeft: Radius.circular(10.0),
                             ),
-                            child: AspectRatio(
-                              aspectRatio: 1,
+                            child: Container(
+                              height: 130.0,
+                              width: 130.0,
                               child: Image.network(
                                 data[index].image,
                                 fit: BoxFit.cover,
                               ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 8.0, horizontal: 16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  data[index].nama,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 19),
-                                ),
-                                const SizedBox(height: 5),
-                                Row(
-                                  children: <Widget>[
-                                    const Icon(
-                                      Icons.location_on,
-                                      size: 20,
-                                      color: Colors.green,
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Text(data[index].alamat),
-                                  ],
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    const Icon(
-                                      Icons.flash_on,
-                                      size: 20,
-                                      color: Colors.amber,
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Text(data[index].daya),
-                                  ],
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    const Icon(
-                                      Icons.ev_station,
-                                      size: 20,
-                                      color: Colors.brown,
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Text(data[index].connector),
-                                    const Spacer(),
-                                    const Icon(
-                                      Icons.attach_money,
-                                      size: 20,
-                                      color: Colors.green,
-                                    ),
-                                    Text(
-                                      data[index].harga,
-                                    ),
-                                  ],
-                                ),
-                              ],
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0, horizontal: 16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    data[index].nama,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      const Icon(
+                                        Icons.location_on,
+                                        size: 20,
+                                        color: Colors.green,
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: Text(
+                                          data[index].alamat,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      const Icon(
+                                        Icons.ev_station,
+                                        size: 20,
+                                        color: Colors.brown,
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Text(data[index].connector),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      const Icon(
+                                        Icons.flash_on,
+                                        size: 20,
+                                        color: Colors.amber,
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Text('${data[index].daya} VA'),
+                                      const Spacer(),
+                                      const Icon(
+                                        Icons.attach_money,
+                                        size: 20,
+                                        color: Colors.green,
+                                      ),
+                                      Text(
+                                        '${data[index].harga}/kWh',
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
-            );
-          }
-        },
+                  );
+                },
+              );
+            }
+          },
+        ),
       ),
     );
   }

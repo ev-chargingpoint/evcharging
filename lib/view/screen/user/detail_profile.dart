@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'package:evchargingpoint/service/api_sevices.dart';
-import 'package:evchargingpoint/service/auth_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,15 +13,12 @@ class DetailProfile extends StatefulWidget {
 class _DetailProfileState extends State<DetailProfile> {
   late SharedPreferences userdata;
 
-  final _formKey = GlobalKey<FormState>();
   final _namalengkap = TextEditingController();
   final _nomorhp = TextEditingController();
   final _namakendaraan = TextEditingController();
   final _nomorpolisi = TextEditingController();
   File? _selectedImage;
   String? _image;
-
-  final ApiServices _dataService = ApiServices();
 
   @override
   void initState() {
@@ -34,7 +29,6 @@ class _DetailProfileState extends State<DetailProfile> {
   _fetchUserData() async {
     userdata = await SharedPreferences.getInstance();
     setState(() {
-      _image = userdata.getString('image').toString();
       _namalengkap.text = userdata.getString('namalengkap').toString();
       _nomorhp.text = userdata.getString('nomorhp').toString();
       _namakendaraan.text = userdata.getString('namakendaraan').toString();
@@ -52,95 +46,6 @@ class _DetailProfileState extends State<DetailProfile> {
         _image = null;
       }
     });
-  }
-
-  void _putProfile() async {
-    try {
-      String? token = await AuthManager.getToken();
-
-      if (token == null) {
-        return;
-      }
-
-      // final idUser = SharedPreferences.getInstance() {
-      //   _idUser = iduser.getString('id');
-      // };
-
-      Map<String, dynamic> putData = {
-        // 'id': idUser,
-        'namalengkap': _namalengkap.text,
-        'nomorhp': _nomorhp.text,
-        'namakendaraan': _namakendaraan.text,
-        'nomorpolisi': _nomorpolisi.text,
-        'image': _selectedImage,
-      };
-
-      if (_selectedImage == null || !await _selectedImage!.exists()) {
-        throw Exception('Image file does not exist');
-      }
-
-      print('Updating user profile: $putData');
-
-      Map<String, dynamic> apiResponse = await _dataService.putProfile(
-        namalengkap: putData['namalengkap'],
-        nomorhp: putData['nomorhp'],
-        namakendaraan: putData['namakendaraan'],
-        nomorpolisi: putData['nomorpolisi'],
-        image: _selectedImage!,
-      );
-
-      print('API Response: $apiResponse');
-
-      if (apiResponse['status'] == 200) {
-        _showSuccessAlert(
-            'Profile updated successfully: ${apiResponse['message']}');
-      } else {
-        _showErrorAlert('Failed to update profile: ${apiResponse['message']}');
-      }
-    } catch (error) {
-      print('Error updating profile: $error');
-      _showErrorAlert('Failed to update profile: $error');
-    }
-  }
-
-  void _showSuccessAlert(String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Success"),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text("OK"),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showErrorAlert(String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Error"),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text("OK"),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -278,7 +183,7 @@ class _DetailProfileState extends State<DetailProfile> {
                     child: Container(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: _putProfile,
+                        onPressed: () {},
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Theme.of(context).primaryColor,
                           padding: const EdgeInsets.all(16.0),

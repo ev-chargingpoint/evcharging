@@ -101,93 +101,106 @@ class _ChargingStationDetailPageState extends State<ChargingStationDetailPage> {
               ),
             ],
           ),
-          Container(
-            constraints: BoxConstraints.loose(const Size.fromHeight(60.0)),
-            decoration: const BoxDecoration(color: Colors.white),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Stack(
-                clipBehavior: Clip.none,
-                alignment: Alignment.topCenter,
-                children: [
-                  Positioned(
-                    top: -60.0,
-                    left: -8.0,
-                    right: -8.0,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16.0),
-                        ),
-                        elevation: 5.0,
+          Column(
+            children: [
+              Container(
+                constraints: BoxConstraints.loose(const Size.fromHeight(60.0)),
+                decoration: const BoxDecoration(color: Colors.white),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    alignment: Alignment.topCenter,
+                    children: [
+                      Positioned(
+                        top: -60.0,
+                        left: -8.0,
+                        right: -8.0,
                         child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.chargingStation.nama,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 24.0,
-                                ),
-                              ),
-                              const SizedBox(height: 8.0),
-                              Row(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16.0),
+                            ),
+                            elevation: 5.0,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Icon(
-                                    Icons.tag,
-                                    size: 20,
-                                    color: Colors.amber,
+                                  Text(
+                                    widget.chargingStation.nama,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 21.0,
+                                    ),
                                   ),
-                                  const SizedBox(width: 5),
-                                  Text(widget.chargingStation.chargingkode),
+                                  const SizedBox(height: 8.0),
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.tag,
+                                        size: 20,
+                                        color: Colors.amber,
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Text(widget.chargingStation.chargingkode),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Icon(
+                                        Icons.location_on,
+                                        size: 20,
+                                        color: Colors.brown,
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                          child: Text(
+                                              widget.chargingStation.alamat)),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.monetization_on,
+                                        size: 20,
+                                        color: Colors.green,
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Text(
+                                          '${widget.chargingStation.harga}/kWh'),
+                                    ],
+                                  ),
                                 ],
                               ),
-                              const SizedBox(height: 8.0),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.location_on,
-                                    size: 20,
-                                    color: Colors.brown,
-                                  ),
-                                  const SizedBox(width: 5),
-                                  Text(widget.chargingStation.alamat),
-                                  const Spacer(),
-                                  const Icon(
-                                    Icons.attach_money,
-                                    size: 20,
-                                    color: Colors.green,
-                                  ),
-                                  Text(widget.chargingStation.harga),
-                                ],
-                              ),
-                              const SizedBox(height: 8.0),
-                            ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-          const SizedBox(height: 30.0),
-          Container(
-            color: Colors.white,
-            child: Column(
-              children: [
-                Row(
+              const SizedBox(height: 70.0),
+              Container(
+                color: Colors.white,
+                child: Column(
                   children: [
-                    buildButton('More Details'),
-                    buildButton('Map'),
+                    Row(
+                      children: [
+                        buildButton('More Details'),
+                        buildButton('Map'),
+                      ],
+                    ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           if (selectedButton == 'More Details')
             Expanded(
@@ -198,14 +211,14 @@ class _ChargingStationDetailPageState extends State<ChargingStationDetailPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        widget.chargingStation.nama,
-                        style: const TextStyle(
+                      const Text(
+                        "Detail Charging Station  :",
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),
                       ),
-                      const SizedBox(height: 8.0),
+                      const SizedBox(height: 10.0),
                       Row(
                         children: [
                           const Icon(
@@ -214,7 +227,9 @@ class _ChargingStationDetailPageState extends State<ChargingStationDetailPage> {
                             color: Colors.amber,
                           ),
                           const SizedBox(width: 5),
-                          Text('Daya Listrik: ${widget.chargingStation.daya}'),
+                          Text(
+                            'Daya Listrik : ${widget.chargingStation.daya} VA',
+                          ),
                         ],
                       ),
                       const SizedBox(height: 8.0),
@@ -227,7 +242,7 @@ class _ChargingStationDetailPageState extends State<ChargingStationDetailPage> {
                           ),
                           const SizedBox(width: 5),
                           Text(
-                              'Tipe Connector:${widget.chargingStation.connector}'),
+                              'Tipe Connector : ${widget.chargingStation.connector}'),
                         ],
                       ),
                       const SizedBox(height: 8.0),
@@ -236,11 +251,11 @@ class _ChargingStationDetailPageState extends State<ChargingStationDetailPage> {
                           const Icon(
                             Icons.ev_station,
                             size: 22,
-                            color: Colors.green,
+                            color: Colors.orange,
                           ),
                           const SizedBox(width: 5),
                           Text(
-                              'Jumlah Port Charging:${widget.chargingStation.ammountplugs}'),
+                              'Jumlah Port Charging : ${widget.chargingStation.ammountplugs}'),
                         ],
                       ),
                       const SizedBox(height: 8.0),
@@ -253,7 +268,7 @@ class _ChargingStationDetailPageState extends State<ChargingStationDetailPage> {
                           ),
                           const SizedBox(width: 5),
                           Text(
-                              'Jam Operasional: ${widget.chargingStation.jamoperasional}'),
+                              'Jam Operasional  : ${widget.chargingStation.jamoperasional}'),
                         ],
                       ),
                       const SizedBox(height: 8.0),
@@ -266,7 +281,7 @@ class _ChargingStationDetailPageState extends State<ChargingStationDetailPage> {
                           ),
                           const SizedBox(width: 5),
                           Text(
-                              'Nomor Telepon: ${widget.chargingStation.nomortelepon}'),
+                              'Nomor Telepon  : ${widget.chargingStation.nomortelepon}'),
                         ],
                       ),
                     ],

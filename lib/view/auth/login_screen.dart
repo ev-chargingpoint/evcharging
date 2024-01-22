@@ -134,21 +134,34 @@ class _LoginPageState extends State<LoginPage> {
                             user.password,
                             user.confirmpassword,
                             user.image);
+                        // ignore: use_build_context_synchronously
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Success'),
+                              content: const Text('Login successful'),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            );
+                          },
+                        );
+                        await Future.delayed(const Duration(seconds: 2));
                         if (email == 'admin@gmail.com') {
                           // ignore: use_build_context_synchronously
                           Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const HomeAdmin()),((route) => false)
-                                
-                          );
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const HomeAdmin()),
+                              ((route) => false));
                         } else {
                           // ignore: use_build_context_synchronously
                           Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const BottomNavbar()),((route) => false)
-                          );
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const BottomNavbar()),
+                              ((route) => false));
                         }
                       } else {
                         // ignore: use_build_context_synchronously
@@ -219,5 +232,4 @@ class _LoginPageState extends State<LoginPage> {
     }
     return null;
   }
-
 }
