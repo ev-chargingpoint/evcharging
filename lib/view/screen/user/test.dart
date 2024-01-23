@@ -1,54 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:evchargingpoint/model/chargingstation_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class ChargingStationDetailPage extends StatefulWidget {
-  final ChargingStation chargingStation;
+class TabsExample extends StatelessWidget {
+  const TabsExample({Key? key}) : super(key: key);
 
-  const ChargingStationDetailPage({Key? key, required this.chargingStation})
-      : super(key: key);
-
-  @override
-  _ChargingStationDetailPageState createState() =>
-      _ChargingStationDetailPageState();
-}
-
-class _ChargingStationDetailPageState extends State<ChargingStationDetailPage> {
   @override
   Widget build(BuildContext context) {
-    final kTabPages = <Widget>[
+    final _kTabPages = <Widget>[
       _details(context),
       _map(context),
     ];
-    final kTabs = <Tab>[
-      const Tab(text: 'Detail'),
-      const Tab(text: 'Map'),
+    final _kTabs = <Tab>[
+      const Tab(icon: Icon(Icons.cloud), text: 'Tab1'),
+      const Tab(icon: Icon(Icons.alarm), text: 'Tab2'),
     ];
     return DefaultTabController(
-      length: kTabs.length,
+      length: _kTabs.length,
       child: Scaffold(
-        backgroundColor: Colors.white,
         body: Column(
           children: [
             Stack(
               alignment: Alignment.topLeft,
               children: [
-                Hero(
-                  tag: 'chargingStationImage${widget.chargingStation.id}',
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(20.0),
-                      bottomRight: Radius.circular(20.0),
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(20.0),
+                    bottomRight: Radius.circular(20.0),
+                  ),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      minHeight: 400.0,
+                      maxHeight: 400.0,
                     ),
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        minHeight: 400.0,
-                        maxHeight: 400.0,
-                      ),
-                      child: Image.network(
-                        widget.chargingStation.image,
-                        fit: BoxFit.cover,
-                      ),
+                    child: Image.network(
+                      'https://static.promediateknologi.id/crop/0x0:0x0/0x0/webp/photo/p2/01/2023/10/04/Foto-9-4183994205.jpg',
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
@@ -97,58 +83,57 @@ class _ChargingStationDetailPageState extends State<ChargingStationDetailPage> {
                                 borderRadius: BorderRadius.circular(16.0),
                               ),
                               elevation: 5.0,
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
+                              child: const Padding(
+                                padding: EdgeInsets.all(16.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      widget.chargingStation.nama,
-                                      style: const TextStyle(
+                                      "widget.chargingStation.nama",
+                                      style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 21.0,
                                       ),
                                     ),
-                                    const SizedBox(height: 8.0),
+                                    SizedBox(height: 8.0),
                                     Row(
                                       children: [
-                                        const Icon(
+                                        Icon(
                                           Icons.tag,
                                           size: 20,
                                           color: Colors.amber,
                                         ),
-                                        const SizedBox(width: 5),
-                                        Text(widget
-                                            .chargingStation.chargingkode),
+                                        SizedBox(width: 5),
+                                        Text(
+                                            "widg.chargingStation.chargingkode"),
                                       ],
                                     ),
-                                    const SizedBox(height: 8.0),
+                                    SizedBox(height: 8.0),
                                     Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        const Icon(
+                                        Icon(
                                           Icons.location_on,
                                           size: 20,
                                           color: Colors.brown,
                                         ),
-                                        const SizedBox(width: 5),
+                                        SizedBox(width: 5),
                                         Expanded(
                                             child: Text(
-                                                widget.chargingStation.alamat)),
+                                                "widget.chargingStation.alamat")),
                                       ],
                                     ),
-                                    const SizedBox(height: 8.0),
+                                    SizedBox(height: 8.0),
                                     Row(
                                       children: [
-                                        const Icon(
+                                        Icon(
                                           Icons.monetization_on,
                                           size: 20,
                                           color: Colors.green,
                                         ),
-                                        const SizedBox(width: 5),
-                                        Text(
-                                            '${widget.chargingStation.harga}/kWh'),
+                                        SizedBox(width: 5),
+                                        Text('/kWh'),
                                       ],
                                     ),
                                   ],
@@ -164,15 +149,14 @@ class _ChargingStationDetailPageState extends State<ChargingStationDetailPage> {
               ],
             ),
             const SizedBox(height: 70.0),
-            TabBar(
-              tabs: kTabs,
-              labelColor: Theme.of(context).primaryColor,
-              unselectedLabelColor: Colors.grey[600],
-              indicatorColor: Theme.of(context).primaryColor,
+            Container(
+              child: TabBar(
+                tabs: _kTabs,
+              ),
             ),
             Expanded(
               child: TabBarView(
-                children: kTabPages,
+                children: _kTabPages,
               ),
             ),
           ],
@@ -182,22 +166,19 @@ class _ChargingStationDetailPageState extends State<ChargingStationDetailPage> {
   }
 
   Widget _map(BuildContext context) {
-    double latitude = double.parse(widget.chargingStation.latitude);
-    double longitude = double.parse(widget.chargingStation.longitude);
-
-    final center = LatLng(latitude, longitude);
+    final LatLng _center = const LatLng(45.521563, -122.677433);
 
     return SizedBox(
       height: 300.0,
       child: GoogleMap(
-        initialCameraPosition: CameraPosition(target: center, zoom: 14),
+        initialCameraPosition: CameraPosition(target: _center, zoom: 14),
         markers: {
           Marker(
             markerId: const MarkerId('marker_chargingstation'),
             icon: BitmapDescriptor.defaultMarkerWithHue(
               BitmapDescriptor.hueAzure,
             ),
-            position: center,
+            position: _center,
             infoWindow: const InfoWindow(
               title: 'Charging Station',
               snippet: 'This is a charging station',
@@ -212,81 +193,78 @@ class _ChargingStationDetailPageState extends State<ChargingStationDetailPage> {
     return SingleChildScrollView(
       child: Container(
         color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
+        child: const Padding(
+          padding: EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 "Detail Charging Station  :",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
               ),
-              const SizedBox(height: 10.0),
+              SizedBox(height: 10.0),
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.flash_on,
                     size: 22,
                     color: Colors.amber,
                   ),
-                  const SizedBox(width: 5),
+                  SizedBox(width: 5),
                   Text(
-                    'Daya Listrik : ${widget.chargingStation.daya} VA',
+                    'Daya Listrik :VA',
                   ),
                 ],
               ),
-              const SizedBox(height: 8.0),
+              SizedBox(height: 8.0),
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.power,
                     size: 22,
                     color: Colors.brown,
                   ),
-                  const SizedBox(width: 5),
-                  Text('Tipe Connector :  ${widget.chargingStation.connector}'),
+                  SizedBox(width: 5),
+                  Text('Tipe Connector : '),
                 ],
               ),
-              const SizedBox(height: 8.0),
+              SizedBox(height: 8.0),
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.ev_station,
                     size: 22,
                     color: Colors.orange,
                   ),
-                  const SizedBox(width: 5),
-                  Text(
-                      'Jumlah Port Charging : ${widget.chargingStation.ammountplugs}'),
+                  SizedBox(width: 5),
+                  Text('Jumlah Port Charging : '),
                 ],
               ),
-              const SizedBox(height: 8.0),
+              SizedBox(height: 8.0),
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.access_time,
                     size: 22,
                     color: Colors.blue,
                   ),
-                  const SizedBox(width: 5),
-                  Text(
-                      'Jam Operasional  :  ${widget.chargingStation.jamoperasional}'),
+                  SizedBox(width: 5),
+                  Text('Jam Operasional  '),
                 ],
               ),
-              const SizedBox(height: 8.0),
+              SizedBox(height: 8.0),
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.phone,
                     size: 22,
                     color: Colors.green,
                   ),
-                  const SizedBox(width: 5),
-                  Text(
-                      'Nomor Telepon  :  ${widget.chargingStation.nomortelepon} '),
+                  SizedBox(width: 5),
+                  Text('Nomor Telepon  : '),
                 ],
               ),
             ],

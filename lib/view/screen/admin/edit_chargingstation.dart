@@ -132,11 +132,10 @@ class _EditChargingStationState extends State<EditChargingStation> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.push(
+                Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => HomeAdmin(),
-                    ));
+                    MaterialPageRoute(builder: (context) => const HomeAdmin()),
+                    ((route) => false));
               },
               child: Text("OK"),
             ),

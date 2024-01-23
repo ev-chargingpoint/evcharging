@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:evchargingpoint/service/auth_manager.dart';
 import 'package:evchargingpoint/view/screen/admin/home_admin.dart';
+import 'package:evchargingpoint/view/screen/user/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -116,11 +117,10 @@ class _AddChargingStationState extends State<AddChargingStation> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.push(
+                Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => HomeAdmin(),
-                    ));
+                    MaterialPageRoute(builder: (context) => const HomeAdmin()),
+                    ((route) => false));
               },
               child: Text("OK"),
             ),

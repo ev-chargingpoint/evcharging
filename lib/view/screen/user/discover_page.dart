@@ -68,95 +68,98 @@ class _DiscoverPageState extends State<DiscoverPage> {
                         ),
                       );
                     },
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      margin: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: <Widget>[
-                          ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(10.0),
-                              bottomLeft: Radius.circular(10.0),
-                            ),
-                            child: Container(
-                              height: 130.0,
-                              width: 130.0,
-                              child: Image.network(
-                                data[index].image,
-                                fit: BoxFit.cover,
+                    child: Hero(
+                      tag: 'chargingStationImage${data[index].id}',
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        margin: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: <Widget>[
+                            ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(10.0),
+                                bottomLeft: Radius.circular(10.0),
+                              ),
+                              child: Container(
+                                height: 130.0,
+                                width: 130.0,
+                                child: Image.network(
+                                  data[index].image,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0, horizontal: 16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    data[index].nama,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      const Icon(
-                                        Icons.location_on,
-                                        size: 20,
-                                        color: Colors.green,
-                                      ),
-                                      const SizedBox(width: 5),
-                                      Expanded(
-                                        child: Text(
-                                          data[index].alamat,
-                                          overflow: TextOverflow.ellipsis,
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 8.0, horizontal: 16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      data[index].nama,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        const Icon(
+                                          Icons.location_on,
+                                          size: 20,
+                                          color: Colors.green,
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      const Icon(
-                                        Icons.ev_station,
-                                        size: 20,
-                                        color: Colors.brown,
-                                      ),
-                                      const SizedBox(width: 5),
-                                      Text(data[index].connector),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      const Icon(
-                                        Icons.flash_on,
-                                        size: 20,
-                                        color: Colors.amber,
-                                      ),
-                                      const SizedBox(width: 5),
-                                      Text('${data[index].daya} VA'),
-                                      const Spacer(),
-                                      const Icon(
-                                        Icons.attach_money,
-                                        size: 20,
-                                        color: Colors.green,
-                                      ),
-                                      Text(
-                                        '${data[index].harga}/kWh',
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                        const SizedBox(width: 5),
+                                        Expanded(
+                                          child: Text(
+                                            data[index].alamat,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        const Icon(
+                                          Icons.ev_station,
+                                          size: 20,
+                                          color: Colors.brown,
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Text(data[index].connector),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        const Icon(
+                                          Icons.flash_on,
+                                          size: 20,
+                                          color: Colors.amber,
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Text('${data[index].daya} VA'),
+                                        const Spacer(),
+                                        const Icon(
+                                          Icons.attach_money,
+                                          size: 20,
+                                          color: Colors.green,
+                                        ),
+                                        Text(
+                                          '${data[index].harga}/kWh',
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   );
