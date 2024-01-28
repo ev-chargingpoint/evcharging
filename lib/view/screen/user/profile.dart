@@ -1,6 +1,7 @@
 import 'package:evchargingpoint/view/auth/login_screen.dart';
 import 'package:evchargingpoint/view/screen/user/detail_profile.dart';
 import 'package:evchargingpoint/view/screen/user/edit_password.dart';
+import 'package:evchargingpoint/view/screen/user/tentang_aplikasi.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -137,6 +138,25 @@ class _ProfileMenuState extends State<ProfileMenu> {
                           const Icon(Icons.arrow_forward_ios_rounded, size: 20),
                     ),
                   ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: ListTile(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const TentangAplikasi()),
+                    );
+                  },
+                  leading: const Icon(Icons.app_settings_alt_outlined),
+                  title: const Text('Tentang Aplikasi'),
+                  trailing:
+                      const Icon(Icons.arrow_forward_ios_rounded, size: 20),
                 ),
               ),
               const SizedBox(height: 20),

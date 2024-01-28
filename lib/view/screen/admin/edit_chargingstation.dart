@@ -52,7 +52,7 @@ class _EditChargingStationState extends State<EditChargingStation> {
     _kodeCtl.text = widget.chargingStation.chargingkode;
     _alamatCtl.text = widget.chargingStation.alamat;
     _nomorCtl.text = widget.chargingStation.nomortelepon;
-    _jumlahCtl.text = widget.chargingStation.ammountplugs as String;
+    _jumlahCtl.text = widget.chargingStation.ammountplugs.toString();
     _dayaCtl.text = widget.chargingStation.daya;
     _tipeCtl.text = widget.chargingStation.connector;
     _hargaCtl.text = widget.chargingStation.harga;
@@ -94,7 +94,7 @@ class _EditChargingStationState extends State<EditChargingStation> {
         chargingkode: putData['chargingkode'],
         alamat: putData['alamat'],
         nomortelepon: putData['nomortelepon'],
-        ammountplugs: putData['ammountplugs'],
+         ammountplugs: int.parse(putData['ammountplugs']),
         daya: putData['daya'],
         connector: putData['connector'],
         harga: putData['harga'],

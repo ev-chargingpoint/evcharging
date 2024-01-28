@@ -49,17 +49,6 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
         title: const Text('Home Page'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const BookingScreen()),
-              );
-            },
-            icon: const Icon(Icons.bookmark_add_outlined),
-          ),
-        ],
       ),
       body: Stack(
         children: [

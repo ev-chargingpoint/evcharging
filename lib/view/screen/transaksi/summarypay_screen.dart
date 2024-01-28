@@ -1,13 +1,154 @@
+import 'package:evchargingpoint/model/chargecar_model.dart';
+import 'package:evchargingpoint/model/chargingstation_model.dart';
+import 'package:evchargingpoint/service/api_sevices.dart';
+import 'package:evchargingpoint/view/screen/user/discover_page.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SummaryPay extends StatefulWidget {
-  const SummaryPay({super.key});
+  final ChargingStation chargingStation;
+  const SummaryPay({super.key, required this.chargingStation});
 
   @override
   State<SummaryPay> createState() => _SummaryPayState();
 }
 
 class _SummaryPayState extends State<SummaryPay> {
+  late SharedPreferences userdata;
+  final _dataservice = ApiServices();
+
+  final _namalengkap = TextEditingController();
+  final _nomorhp = TextEditingController();
+  final _namakendaraan = TextEditingController();
+  final _nomorpolisi = TextEditingController();
+
+  final TextEditingController _starttime = TextEditingController();
+  final TextEditingController _endtime = TextEditingController();
+  final TextEditingController _paymentmethod = TextEditingController();
+  final TextEditingController _totalprice = TextEditingController();
+  final TextEditingController _totalkwh = TextEditingController();
+  final TextEditingController _idchargecar = TextEditingController();
+  final TextEditingController _inputpembayaran = TextEditingController();
+
+  Future<void> retreiveData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _idchargecar.text = prefs.getString('idchargecar') ?? '';
+      _starttime.text = prefs.getString('starttime') ?? '';
+      _paymentmethod.text = prefs.getString('paymentmethod') ?? '';
+      _endtime.text = prefs.getString('endtime') ?? '';
+      _totalprice.text = prefs.getString('totalprice') ?? '';
+      _totalkwh.text = prefs.getString('totalkwh') ?? '';
+      _inputpembayaran.text = prefs.getString('inputpembayaran') ?? '';
+      print(
+        _idchargecar.text,
+      );
+      print(
+        _starttime.text,
+      );
+      print(
+        _endtime.text,
+      );
+      print(
+        _totalprice.text,
+      );
+      print(
+        _totalkwh.text,
+      );
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserData();
+    retreiveData();
+  }
+
+  _fetchUserData() async {
+    userdata = await SharedPreferences.getInstance();
+    setState(() {
+      _namalengkap.text = userdata.getString('namalengkap').toString();
+      _nomorhp.text = userdata.getString('nomorhp').toString();
+      _namakendaraan.text = userdata.getString('namakendaraan').toString();
+      _nomorpolisi.text = userdata.getString('nomorpolisi').toString();
+    });
+  }
+
+  void _putCharge() async {
+    final putData = ChargeCarStatus(
+      status: true,
+    );
+
+    StatusChargeResponse? res = await _dataservice.putChargeStatus(
+      _idchargecar.text,
+      putData,
+    );
+
+    if (res != null && res.status == 201) {
+      _showSuccessAlert(res.message);
+    } else {
+      _showErrorAlert(res?.message ?? 'An error occurred');
+    }
+  }
+
+  // Future<void> _savepayment() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   prefs.setString('paymentmethod', _paymentmethod.text);
+  //   prefs.setString('inputpembayaran', _totalprice.text);
+  //   prefs.setBool('payment', true);
+  //   prefs.setString('idchargecar', _idchargecar.text);
+  // }
+
+  void _showSuccessAlert(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Success"),
+          content: Text(message),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          actions: [
+            TextButton(
+               onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const DiscoverPage()),
+                    ((route) => false));
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showErrorAlert(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Error"),
+          content: Text(message),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,47 +205,50 @@ class _SummaryPayState extends State<SummaryPay> {
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text('Nama'),
-                          Text('Rizky'),
+                        children: [
+                          const Text('Nama'),
+                          Text(_namalengkap.text),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text('Nomor Telepon'),
-                          Text('08123456789'),
+                        children: [
+                          const Text('Nomor Telepon'),
+                          Text(_nomorhp.text),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text('Nama Kendaraan'),
-                          Text('Toyota Supra')
+                        children: [
+                          const Text('Nama Kendaraan'),
+                          Text(_namakendaraan.text)
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text('Plat Nomor'),
-                          Text('B 1234 ABC')
+                        children: [
+                          const Text('Plat Nomor'),
+                          Text(_nomorpolisi.text)
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text('Chargigng Station'),
-                          Text('Chargigng Station Ciplay')
+                        children: [
+                          const Text('Chargigng Station'),
+                          Text(widget.chargingStation.nama)
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [Text('Alamat'), Text('Jl. Jalan')],
+                        children: [
+                          const Text('Alamat'),
+                          Text(widget.chargingStation.alamat)
+                        ],
                       ),
                     ],
                   ),
@@ -116,64 +260,56 @@ class _SummaryPayState extends State<SummaryPay> {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
-              const Card(
+              Card(
                 child: Padding(
-                  padding: EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(20.0),
                   child: Column(
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Tanggal'),
-                          Text('12/12/2021'),
+                          const Text('Start Charging'),
+                          Text(_starttime.text),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Start Charging'),
-                          Text('12:00'),
+                          const Text('End Charging'),
+                          Text(_endtime.text),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('End Charging'),
-                          Text('13:00'),
+                          const Text('Total Pengisian'),
+                          Text(_totalkwh.text),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Total Pengisian'),
-                          Text('20 kWh'),
+                          const Text('Total Harga'),
+                          Text(_totalprice.text),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Total Harga'),
-                          Text('Rp. 100.000'),
+                          const Text('Payment Method'),
+                          Text(_paymentmethod.text),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Payment Method'),
-                          Text('Credit Card'),
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Total Bayar'),
-                          Text('Rp. 102.000'),
+                          const Text('Total Bayar'),
+                          Text(_inputpembayaran.text),
                         ],
                       ),
                     ],
@@ -188,7 +324,7 @@ class _SummaryPayState extends State<SummaryPay> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 13.0),
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: _putCharge,
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).primaryColor,
               padding: const EdgeInsets.all(16.0),

@@ -178,6 +178,31 @@ class _ChargingStationDetailPageState extends State<ChargingStationDetailPage> {
             ),
           ],
         ),
+        bottomNavigationBar: BottomAppBar(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+          child: ElevatedButton(
+            onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BookingScreen(
+                  chargingStation: widget.chargingStation,
+                ),
+              ),
+            );
+          },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).primaryColor,
+              padding: const EdgeInsets.all(13.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: const Text('Charge Now'),
+          ),
+        ),
+      ),
       ),
     );
   }
