@@ -1,3 +1,4 @@
+import 'package:evchargingpoint/view/screen/transaksi/booking_screen.dart';
 import 'package:evchargingpoint/view/screen/user/detail_chargingstation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -48,6 +49,17 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
         title: const Text('Home Page'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const BookingScreen()),
+              );
+            },
+            icon: const Icon(Icons.bookmark_add_outlined),
+          ),
+        ],
       ),
       body: Stack(
         children: [

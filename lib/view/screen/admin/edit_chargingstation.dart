@@ -52,7 +52,7 @@ class _EditChargingStationState extends State<EditChargingStation> {
     _kodeCtl.text = widget.chargingStation.chargingkode;
     _alamatCtl.text = widget.chargingStation.alamat;
     _nomorCtl.text = widget.chargingStation.nomortelepon;
-    _jumlahCtl.text = widget.chargingStation.ammountplugs;
+    _jumlahCtl.text = widget.chargingStation.ammountplugs as String;
     _dayaCtl.text = widget.chargingStation.daya;
     _tipeCtl.text = widget.chargingStation.connector;
     _hargaCtl.text = widget.chargingStation.harga;

@@ -3,7 +3,7 @@ class ChargingStation {
   final String chargingkode;
   final String nama;
   final String alamat;
-  final String ammountplugs;
+  final int ammountplugs;
   final String daya;
   final String connector;
   final String harga;
@@ -12,6 +12,7 @@ class ChargingStation {
   final String jamoperasional;
   final String longitude;
   final String latitude;
+  final int available;
 
   ChargingStation({
     required this.id,
@@ -27,6 +28,7 @@ class ChargingStation {
     required this.jamoperasional,
     required this.longitude,
     required this.latitude,
+    required this.available,
   });
 
   factory ChargingStation.fromJson(Map<String, dynamic> json) {
@@ -44,6 +46,7 @@ class ChargingStation {
       jamoperasional: json['jamoperasional'] ?? '',
       longitude: json['longitude'] ?? '',
       latitude: json['latitude'] ?? '',
+      available: json['available'] ?? '',
     );
   }
 }
@@ -97,6 +100,7 @@ class ChargingStationResponse {
         jamoperasional: responseData['jamoperasional'] ?? '',
         longitude: responseData['longitude'] ?? '',
         latitude: responseData['latitude'] ?? '',
+        available: responseData['available'] ?? '',
       );
     } else {
       // Handle cases where 'data' key is missing in the response

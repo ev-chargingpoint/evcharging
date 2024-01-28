@@ -1,3 +1,4 @@
+import 'package:evchargingpoint/view/screen/transaksi/booking_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:evchargingpoint/model/chargingstation_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -289,6 +290,7 @@ class _ChargingStationDetailPageState extends State<ChargingStationDetailPage> {
                       'Nomor Telepon  :  ${widget.chargingStation.nomortelepon} '),
                 ],
               ),
+              
             ],
           ),
         ),
