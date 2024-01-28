@@ -6,14 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PaymentScreen extends StatefulWidget {
-   final ChargingStation chargingStation;
+  final ChargingStation chargingStation;
 
-  const PaymentScreen({Key? key, required this.chargingStation}) : super(key: key);
+  const PaymentScreen({Key? key, required this.chargingStation})
+      : super(key: key);
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
 }
-
 
 class _PaymentScreenState extends State<PaymentScreen> {
   // final _formKey = GlobalKey<FormState>();
@@ -22,10 +22,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
   final TextEditingController _starttime = TextEditingController();
   final TextEditingController _endtime = TextEditingController();
   final TextEditingController _totalprice = TextEditingController();
-  final TextEditingController _totalkwh= TextEditingController();
+  final TextEditingController _totalkwh = TextEditingController();
   final TextEditingController _idchargecar = TextEditingController();
 
-  Future <void> retreiveData() async {
+  Future<void> retreiveData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _idchargecar.text = prefs.getString('idchargecar') ?? '';
@@ -52,37 +52,42 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   void _putCharge() async {
-  await _savecharge();
-  await _savepayment();
-  // Buat objek ChargeCarInput
-  final putData = ChargeCarPut(
-    paymentmethod: selectedPaymentMethod,
-    inputpembayaran: _totalprice.text,
-    payment: true,
-  );
+    if (selectedPaymentMethod.isEmpty) {
+      _showErrorAlert('Pilih metode pembayaran terlebih dahulu');
+      return;
+    }
 
-  PutChargeResponse? res = await _dataService.putCharge(
-    _idchargecar.text,
-    putData,
-  );
+    await _savecharge();
+    await _savepayment();
+    // Buat objek ChargeCarInput
+    final putData = ChargeCarPut(
+      paymentmethod: selectedPaymentMethod,
+      inputpembayaran: _totalprice.text,
+      payment: true,
+    );
 
-  if (res != null && res.status == 201) {
-    _showSuccessAlert(res.message);
-  } else {
-    _showErrorAlert(res?.message ?? 'An error occurred');
+    PutChargeResponse? res = await _dataService.putCharge(
+      _idchargecar.text,
+      putData,
+    );
+
+    if (res != null && res.status == 201) {
+      _showSuccessAlert(res.message);
+    } else {
+      _showErrorAlert(res?.message ?? 'An error occurred');
+    }
   }
-}
 
-Future <void> _savecharge()async{
-  final prefs = await SharedPreferences.getInstance();
-  prefs.setString('starttime', _starttime.text);
-  prefs.setString('endtime', _endtime.text);
-  prefs.setString('totalkwh', _totalkwh.text);
-  prefs.setString('totalprice', _totalprice.text);
-  prefs.setString('idchargecar', _idchargecar.text);
-}
+  Future<void> _savecharge() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('starttime', _starttime.text);
+    prefs.setString('endtime', _endtime.text);
+    prefs.setString('totalkwh', _totalkwh.text);
+    prefs.setString('totalprice', _totalprice.text);
+    prefs.setString('idchargecar', _idchargecar.text);
+  }
 
- Future<void> _savepayment() async {
+  Future<void> _savepayment() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('paymentmethod', selectedPaymentMethod);
     prefs.setString('inputpembayaran', _totalprice.text);
@@ -107,8 +112,8 @@ Future <void> _savecharge()async{
                     context,
                     MaterialPageRoute(
                         builder: (context) => SummaryPay(
-                          chargingStation: widget.chargingStation,
-                        )),
+                              chargingStation: widget.chargingStation,
+                            )),
                     ((route) => false));
               },
               child: Text("OK"),
@@ -146,14 +151,13 @@ Future <void> _savecharge()async{
   void initState() {
     super.initState();
     retreiveData();
-    
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Padding(
-          // key: _formKey,
+      // key: _formKey,
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
@@ -220,8 +224,9 @@ Future <void> _savecharge()async{
                   ),
                   const SizedBox(height: 10),
                   Text(
-                     'Rp. ${_totalprice.text}',
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    'Rp. ${_totalprice.text}',
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 20),
                   SizedBox(
@@ -229,6 +234,7 @@ Future <void> _savecharge()async{
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
+                        selectedPaymentMethod.isEmpty ? null : () => _putCharge();
                         _putCharge();
                       },
                       child: const Text('Bayar'),

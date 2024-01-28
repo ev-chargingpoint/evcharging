@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'dart:math';
 import 'package:evchargingpoint/model/chargecar_model.dart';
 import 'package:evchargingpoint/model/chargingstation_model.dart';
 import 'package:evchargingpoint/service/api_sevices.dart';
-import 'package:evchargingpoint/service/auth_manager.dart';
 import 'package:evchargingpoint/view/screen/transaksi/payment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -65,44 +63,48 @@ class _BookingScreenState extends State<BookingScreen> {
     });
   }
 
-void _postCharge() async {
-  final isValidForm = _formKey.currentState!.validate();
-  await _savepayment();
-  if (!isValidForm) {
-    return;
+  void _postCharge() async {
+    final isValidForm = _formKey.currentState!.validate();
+    await _savepayment();
+    if (!isValidForm) {
+      return;
+    }
+
+    // Buat objek ChargeCarInput
+    final postData = ChargeCarInput(
+      starttime: _startChargeController.text,
+      endtime: _endChargeController.text,
+      totalkwh: _kwhController.text,
+      totalprice: _totalChargeController.text,
+    );
+
+    PostChargeResponse? res = await _dataService.postCharge(
+      widget.chargingStation.id,
+      postData,
+    );
+
+    try {
+      if (res != null && res.status == 201) {
+        if (res.data != null && res.data!['_id'] != null) {
+          await _saveChargeCarId(res.data!['_id']);
+        }
+        if (res.message != null) {
+          _showSuccessAlert(res.message);
+        }
+      } else {
+        _showErrorAlert(res?.message ?? 'An error occurred');
+      }
+    } catch (e) {
+      print('An error occurred: $e');
+    }
   }
 
-  // Buat objek ChargeCarInput
-  final postData = ChargeCarInput(
-    starttime: _startChargeController.text,
-    endtime: _endChargeController.text,
-    totalkwh: _kwhController.text,
-    totalprice: _totalChargeController.text,
-  );
-
-  PostChargeResponse? res = await _dataService.postCharge(
-    widget.chargingStation.id,
-    postData,
-  );
-  
-  if (res != null && res.status == 201) {
-  if (res.data != null && res.data!['_id'] != null) {
-    await _saveChargeCarId(res.data!['_id']);
+  Future<void> _saveChargeCarId(String chargeCarId) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('idchargecar', chargeCarId);
   }
-  if (res.message != null) {
-    _showSuccessAlert(res.message);
-  }
-} else {
-  _showErrorAlert(res?.message ?? 'An error occurred');
-}
-}
 
-Future<void> _saveChargeCarId(String chargeCarId) async {
-  final prefs = await SharedPreferences.getInstance();
-  prefs.setString('idchargecar', chargeCarId);
-}
-
- Future<void> _savepayment() async {
+  Future<void> _savepayment() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('starttime', _startChargeController.text);
     prefs.setString('endtime', _endChargeController.text);
@@ -127,8 +129,8 @@ Future<void> _saveChargeCarId(String chargeCarId) async {
                     context,
                     MaterialPageRoute(
                         builder: (context) => PaymentScreen(
-                          chargingStation: widget.chargingStation,
-                        )),
+                              chargingStation: widget.chargingStation,
+                            )),
                     ((route) => false));
               },
               child: Text("OK"),
@@ -161,7 +163,6 @@ Future<void> _saveChargeCarId(String chargeCarId) async {
       },
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
