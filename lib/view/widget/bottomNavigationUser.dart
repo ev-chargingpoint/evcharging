@@ -1,6 +1,7 @@
 import 'package:evchargingpoint/view/screen/user/discover_page.dart';
 import 'package:evchargingpoint/view/screen/user/home_page.dart';
 import 'package:evchargingpoint/view/screen/user/profile.dart';
+import 'package:evchargingpoint/view/screen/user/transaksi_list.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavbar extends StatefulWidget {
@@ -15,6 +16,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
   final List<Widget> _pages = [
     const HomePage(),
     const DiscoverPage(),
+    const TransaksiPage(),
     const ProfileMenu()
   ];
 
@@ -44,6 +46,8 @@ class _BottomNavbarState extends State<BottomNavbar> {
               label: 'Home',
             ),
             BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Discover'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.history), label: 'Transaksi'),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
           ],
           backgroundColor: Colors.white,

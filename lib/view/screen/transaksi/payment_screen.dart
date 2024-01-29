@@ -1,31 +1,30 @@
 import 'package:evchargingpoint/model/chargecar_model.dart';
 import 'package:evchargingpoint/model/chargingstation_model.dart';
 import 'package:evchargingpoint/service/api_sevices.dart';
-import 'package:evchargingpoint/view/screen/transaksi/summarypay_screen.dart';
+import 'package:evchargingpoint/view/widget/bottomNavigationUser.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PaymentScreen extends StatefulWidget {
-   final ChargingStation chargingStation;
+  final ChargingStation chargingStation;
 
-  const PaymentScreen({Key? key, required this.chargingStation}) : super(key: key);
+  const PaymentScreen({Key? key, required this.chargingStation})
+      : super(key: key);
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
 }
 
-
 class _PaymentScreenState extends State<PaymentScreen> {
-  // final _formKey = GlobalKey<FormState>();
   final _dataService = ApiServices();
   String selectedPaymentMethod = '';
   final TextEditingController _starttime = TextEditingController();
   final TextEditingController _endtime = TextEditingController();
   final TextEditingController _totalprice = TextEditingController();
-  final TextEditingController _totalkwh= TextEditingController();
+  final TextEditingController _totalkwh = TextEditingController();
   final TextEditingController _idchargecar = TextEditingController();
 
-  Future <void> retreiveData() async {
+  Future<void> retreiveData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _idchargecar.text = prefs.getString('idchargecar') ?? '';
@@ -51,43 +50,39 @@ class _PaymentScreenState extends State<PaymentScreen> {
     });
   }
 
-  void _putCharge() async {
-  await _savecharge();
-  await _savepayment();
-  // Buat objek ChargeCarInput
-  final putData = ChargeCarPut(
-    paymentmethod: selectedPaymentMethod,
-    inputpembayaran: _totalprice.text,
-    payment: true,
-  );
-
-  PutChargeResponse? res = await _dataService.putCharge(
-    _idchargecar.text,
-    putData,
-  );
-
-  if (res != null && res.status == 201) {
-    _showSuccessAlert(res.message);
-  } else {
-    _showErrorAlert(res?.message ?? 'An error occurred');
+  @override
+  void initState() {
+    super.initState();
+    retreiveData();
   }
-}
 
-Future <void> _savecharge()async{
-  final prefs = await SharedPreferences.getInstance();
-  prefs.setString('starttime', _starttime.text);
-  prefs.setString('endtime', _endtime.text);
-  prefs.setString('totalkwh', _totalkwh.text);
-  prefs.setString('totalprice', _totalprice.text);
-  prefs.setString('idchargecar', _idchargecar.text);
-}
+  Future<void> _putAndClearSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('idchargecar');
+    prefs.remove('starttime');
+    prefs.remove('endtime');
+    prefs.remove('totalprice');
+    prefs.remove('totalkwh');
+  }
 
- Future<void> _savepayment() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('paymentmethod', selectedPaymentMethod);
-    prefs.setString('inputpembayaran', _totalprice.text);
-    prefs.setBool('payment', true);
-    prefs.setString('idchargecar', _idchargecar.text);
+  void _putCharge() async {
+    final putData = ChargeCarPut(
+      paymentmethod: selectedPaymentMethod,
+      inputpembayaran: _totalprice.text,
+      payment: true,
+    );
+
+    PutChargeResponse? res = await _dataService.putCharge(
+      _idchargecar.text,
+      putData,
+    );
+
+    if (res != null && res.status == 201) {
+      await _putAndClearSharedPreferences();
+      _showSuccessAlert(res.message);
+    } else {
+      _showErrorAlert(res?.message ?? 'An error occurred');
+    }
   }
 
   void _showSuccessAlert(String message) {
@@ -95,7 +90,7 @@ Future <void> _savecharge()async{
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Success"),
+          title: const Text("Success"),
           content: Text(message),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -106,12 +101,10 @@ Future <void> _savecharge()async{
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => SummaryPay(
-                          chargingStation: widget.chargingStation,
-                        )),
+                        builder: (context) => const BottomNavbar()),
                     ((route) => false));
               },
-              child: Text("OK"),
+              child: const Text("OK"),
             ),
           ],
         );
@@ -124,7 +117,7 @@ Future <void> _savecharge()async{
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Error"),
+          title: const Text("Error"),
           content: Text(message),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -134,7 +127,7 @@ Future <void> _savecharge()async{
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("OK"),
+              child: const Text("OK"),
             ),
           ],
         );
@@ -143,17 +136,10 @@ Future <void> _savecharge()async{
   }
 
   @override
-  void initState() {
-    super.initState();
-    retreiveData();
-    
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Padding(
-          // key: _formKey,
+      // key: _formKey,
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
@@ -207,11 +193,11 @@ Future <void> _savecharge()async{
               buildPaymentOption('E-Wallet'),
             ],
           ),
-          const SizedBox(height: 200),
+          const SizedBox(height: 220),
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(5.0),
               child: Column(
                 children: [
                   const Text(
@@ -220,8 +206,9 @@ Future <void> _savecharge()async{
                   ),
                   const SizedBox(height: 10),
                   Text(
-                     'Rp. ${_totalprice.text}',
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    'Rp. ${_totalprice.text}',
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 20),
                   SizedBox(
@@ -231,6 +218,11 @@ Future <void> _savecharge()async{
                       onPressed: () {
                         _putCharge();
                       },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
                       child: const Text('Bayar'),
                     ),
                   ),

@@ -179,30 +179,52 @@ class _ChargingStationDetailPageState extends State<ChargingStationDetailPage> {
           ],
         ),
         bottomNavigationBar: BottomAppBar(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-          child: ElevatedButton(
-            onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BookingScreen(
-                  chargingStation: widget.chargingStation,
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+            child: ElevatedButton(
+              onPressed: () {
+                if (widget.chargingStation.available > 0) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BookingScreen(
+                        chargingStation: widget.chargingStation,
+                      ),
+                    ),
+                  );
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      title: Text('Error'),
+                      content: Text('No available plugs'),
+                      actions: <Widget>[
+                        TextButton(
+                          child: Text('OK'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).primaryColor,
+                padding: const EdgeInsets.all(13.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
-            );
-          },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).primaryColor,
-              padding: const EdgeInsets.all(13.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
+              child: const Text('Charge Now'),
             ),
-            child: const Text('Charge Now'),
           ),
         ),
-      ),
       ),
     );
   }
@@ -315,7 +337,6 @@ class _ChargingStationDetailPageState extends State<ChargingStationDetailPage> {
                       'Nomor Telepon  :  ${widget.chargingStation.nomortelepon} '),
                 ],
               ),
-              
             ],
           ),
         ),

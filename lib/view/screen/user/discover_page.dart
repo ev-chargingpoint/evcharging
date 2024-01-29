@@ -126,23 +126,46 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                     Row(
                                       children: <Widget>[
                                         const Icon(
-                                          Icons.ev_station,
-                                          size: 20,
-                                          color: Colors.brown,
-                                        ),
-                                        const SizedBox(width: 5),
-                                        Text(data[index].connector),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: <Widget>[
-                                        const Icon(
                                           Icons.flash_on,
                                           size: 20,
                                           color: Colors.amber,
                                         ),
                                         const SizedBox(width: 5),
-                                        Text('${data[index].daya} VA'),
+                                        Text(data[index].daya),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 2.0,
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Container(
+                                          padding: const EdgeInsets.all(5.0),
+                                          decoration: BoxDecoration(
+                                            color: data[index].available > 0
+                                                ? Colors.green
+                                                : Colors.red,
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          ),
+                                          child: Row(
+                                            children: <Widget>[
+                                              const Text(
+                                                'Plugs:',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 5),
+                                              Text(
+                                                '${data[index].available}/${data[index].ammountplugs}',
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                         const Spacer(),
                                         const Icon(
                                           Icons.attach_money,

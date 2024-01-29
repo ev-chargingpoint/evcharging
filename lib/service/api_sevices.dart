@@ -38,6 +38,47 @@ class ApiServices {
     }
   }
 
+  Future<List<ChargeCar>> getAllTransaksi() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? $token = prefs.getString('token');
+
+      if ($token == null) {
+        throw Exception('User not authenticated');
+      }
+
+      Response response = await dio.get(
+        '$_baseUrl/chargecar',
+        options: Options(
+          headers: {
+            'Authorization': $token,
+          },
+        ),
+      );
+      if (response.statusCode == 200) {
+        List<dynamic> responseData = jsonDecode(response.data)['data'];
+        print(response.data);
+
+        if (responseData == null) {
+          throw Exception('No data available');
+        }
+
+        final chargeCars =
+            responseData.map((item) => ChargeCar.fromJson(item)).toList();
+        return chargeCars;
+      }
+      return [];
+    } on DioException catch (e) {
+      if (e.response != null && e.response!.statusCode != 200) {
+        debugPrint('Failed to get transaction data');
+        return [];
+      }
+      rethrow;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<LoginResponse?> login(LoginInput login) async {
     try {
       final response = await dio.post(
@@ -219,7 +260,6 @@ class ApiServices {
     }
   }
 
-
   Future<Map<String, dynamic>> putProfile({
     String id = '',
     required String namalengkap,
@@ -344,78 +384,81 @@ class ApiServices {
     }
   }
 
-Future<PostChargeResponse?> postCharge(String id, ChargeCarInput charge) async {
-  try {
-    String? token = await AuthManager.getToken();
-    final response = await dio.post(
-      '$_baseUrl/chargecar?id=$id',
-      data: charge.toJson(),
-      options: Options(
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token,
-        },
-      ),
-    );
-    print(response.data);
+  Future<PostChargeResponse?> postCharge(
+      String id, ChargeCarInput charge) async {
+    try {
+      String? token = await AuthManager.getToken();
+      final response = await dio.post(
+        '$_baseUrl/chargecar?id=$id',
+        data: charge.toJson(),
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token,
+          },
+        ),
+      );
+      print(response.data);
 
-    if (response.statusCode == 200) {
-      return PostChargeResponse.fromJson(jsonDecode(response.data));
+      if (response.statusCode == 200) {
+        return PostChargeResponse.fromJson(jsonDecode(response.data));
+      }
+
+      return null;
+    } catch (e) {
+      rethrow;
     }
-
-    return null;
-  } catch (e) {
-    rethrow;
   }
-}
 
-Future <PutChargeResponse> putCharge(String idchargecar, ChargeCarPut charge) async {
-  try {
-    String? token = await AuthManager.getToken();
-    final response = await dio.put(
-      '$_baseUrl/chargecar?id=$idchargecar',
-      data: charge.toJson(),
-      options: Options(
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token,
-        },
-      ),
-    );
-    print(charge.toJson());
+  Future<PutChargeResponse> putCharge(
+      String idchargecar, ChargeCarPut charge) async {
+    try {
+      String? token = await AuthManager.getToken();
+      final response = await dio.put(
+        '$_baseUrl/chargecar?id=$idchargecar',
+        data: charge.toJson(),
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token,
+          },
+        ),
+      );
+      print(charge.toJson());
 
-    if (response.statusCode == 200) {
+      if (response.statusCode == 200) {
+        return PutChargeResponse.fromJson(jsonDecode(response.data));
+      }
+
       return PutChargeResponse.fromJson(jsonDecode(response.data));
+    } catch (e) {
+      rethrow;
     }
-
-    return PutChargeResponse.fromJson(jsonDecode(response.data));
-  } catch (e) {
-    rethrow;
   }
-}
 
-Future <StatusChargeResponse> putChargeStatus(String idchargecar, ChargeCarStatus charge) async {
-  try {
-    String? token = await AuthManager.getToken();
-    final response = await dio.put(
-      '$_baseUrl/chargecar?id=$idchargecar',
-      data: charge.toJson(),
-      options: Options(
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token,
-        },
-      ),
-    );
-    print(charge.toJson());
+  Future<StatusChargeResponse> putChargeStatus(
+      String idchargecar, ChargeCarStatus charge) async {
+    try {
+      String? token = await AuthManager.getToken();
+      final response = await dio.put(
+        '$_baseUrl/chargecar?id=$idchargecar',
+        data: charge.toJson(),
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token,
+          },
+        ),
+      );
+      print(charge.toJson());
 
-    if (response.statusCode == 200) {
+      if (response.statusCode == 200) {
+        return StatusChargeResponse.fromJson(jsonDecode(response.data));
+      }
+
       return StatusChargeResponse.fromJson(jsonDecode(response.data));
+    } catch (e) {
+      rethrow;
     }
-
-    return StatusChargeResponse.fromJson(jsonDecode(response.data));
-  } catch (e) {
-    rethrow;
   }
-}
 }

@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'dart:math';
 import 'package:evchargingpoint/model/chargecar_model.dart';
 import 'package:evchargingpoint/model/chargingstation_model.dart';
 import 'package:evchargingpoint/service/api_sevices.dart';
-import 'package:evchargingpoint/service/auth_manager.dart';
 import 'package:evchargingpoint/view/screen/transaksi/payment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -65,44 +63,44 @@ class _BookingScreenState extends State<BookingScreen> {
     });
   }
 
-void _postCharge() async {
-  final isValidForm = _formKey.currentState!.validate();
-  await _savepayment();
-  if (!isValidForm) {
-    return;
+  void _postCharge() async {
+    final isValidForm = _formKey.currentState!.validate();
+    await _savepayment();
+    if (!isValidForm) {
+      return;
+    }
+
+    // Buat objek ChargeCarInput
+    final postData = ChargeCarInput(
+      starttime: _startChargeController.text,
+      endtime: _endChargeController.text,
+      totalkwh: _kwhController.text,
+      totalprice: _totalChargeController.text,
+    );
+
+    PostChargeResponse? res = await _dataService.postCharge(
+      widget.chargingStation.id,
+      postData,
+    );
+
+    if (res!.status == 201) {
+      if (res.data != null && res.data!['_id'] != null) {
+        await _saveChargeCarId(res.data!['_id']);
+      }
+      if (res.message != null) {
+        _showSuccessAlert(res.message);
+      }
+    } else {
+      _showErrorAlert(res?.message ?? 'An error occurred');
+    }
   }
 
-  // Buat objek ChargeCarInput
-  final postData = ChargeCarInput(
-    starttime: _startChargeController.text,
-    endtime: _endChargeController.text,
-    totalkwh: _kwhController.text,
-    totalprice: _totalChargeController.text,
-  );
-
-  PostChargeResponse? res = await _dataService.postCharge(
-    widget.chargingStation.id,
-    postData,
-  );
-  
-  if (res != null && res.status == 201) {
-  if (res.data != null && res.data!['_id'] != null) {
-    await _saveChargeCarId(res.data!['_id']);
+  Future<void> _saveChargeCarId(String chargeCarId) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('idchargecar', chargeCarId);
   }
-  if (res.message != null) {
-    _showSuccessAlert(res.message);
-  }
-} else {
-  _showErrorAlert(res?.message ?? 'An error occurred');
-}
-}
 
-Future<void> _saveChargeCarId(String chargeCarId) async {
-  final prefs = await SharedPreferences.getInstance();
-  prefs.setString('idchargecar', chargeCarId);
-}
-
- Future<void> _savepayment() async {
+  Future<void> _savepayment() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('starttime', _startChargeController.text);
     prefs.setString('endtime', _endChargeController.text);
@@ -127,8 +125,8 @@ Future<void> _saveChargeCarId(String chargeCarId) async {
                     context,
                     MaterialPageRoute(
                         builder: (context) => PaymentScreen(
-                          chargingStation: widget.chargingStation,
-                        )),
+                              chargingStation: widget.chargingStation,
+                            )),
                     ((route) => false));
               },
               child: Text("OK"),
@@ -161,7 +159,6 @@ Future<void> _saveChargeCarId(String chargeCarId) async {
       },
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -310,8 +307,8 @@ Future<void> _saveChargeCarId(String chargeCarId) async {
                                                 child: Container(
                                                   decoration: BoxDecoration(
                                                     shape: BoxShape.circle,
-                                                    color: Colors.grey.withOpacity(
-                                                        0.5), // Ganti warna latar belakang sesuai keinginan
+                                                    color: Colors.grey
+                                                        .withOpacity(0.5),
                                                   ),
                                                   padding:
                                                       const EdgeInsets.all(8.0),
@@ -347,7 +344,7 @@ Future<void> _saveChargeCarId(String chargeCarId) async {
                                                   Radius.circular(50),
                                                 ),
                                               ),
-                                              hintText: "Rp. 0",
+                                              prefixText: "Rp. ",
                                             ),
                                           ),
                                         ),
@@ -360,7 +357,7 @@ Future<void> _saveChargeCarId(String chargeCarId) async {
                                             ),
                                           ),
                                         ),
-                                        const SizedBox(height: 8.0),
+                                        const SizedBox(height: 9.0),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: TextFormField(
@@ -418,7 +415,8 @@ Future<void> _saveChargeCarId(String chargeCarId) async {
               ),
               const SizedBox(height: 340.0),
               Padding(
-                padding: const EdgeInsets.all(32.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 30),
                 child: Container(
                   width: double.infinity,
                   height: 50,
@@ -426,10 +424,15 @@ Future<void> _saveChargeCarId(String chargeCarId) async {
                     onPressed: () {
                       _postCharge();
                     },
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
                     child: const Text("Bayar"),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

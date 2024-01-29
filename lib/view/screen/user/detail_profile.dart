@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailProfile extends StatefulWidget {
@@ -17,8 +15,6 @@ class _DetailProfileState extends State<DetailProfile> {
   final _nomorhp = TextEditingController();
   final _namakendaraan = TextEditingController();
   final _nomorpolisi = TextEditingController();
-  File? _selectedImage;
-  String? _image;
 
   @override
   void initState() {
@@ -33,18 +29,6 @@ class _DetailProfileState extends State<DetailProfile> {
       _nomorhp.text = userdata.getString('nomorhp').toString();
       _namakendaraan.text = userdata.getString('namakendaraan').toString();
       _nomorpolisi.text = userdata.getString('nomorpolisi').toString();
-    });
-  }
-
-  void _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) {
-        _selectedImage = File(pickedFile.path);
-        _image = null;
-      }
     });
   }
 
@@ -75,28 +59,19 @@ class _DetailProfileState extends State<DetailProfile> {
                       shape: BoxShape.circle,
                     ),
                     child: ClipOval(
-                      child: _selectedImage != null
-                          ? Image.file(
-                              _selectedImage!,
-                              width: 130,
-                              height: 130,
-                              fit: BoxFit.cover,
-                            )
-                          : Image.network(
-                              'https://berita.99.co/wp-content/uploads/2023/01/foto-profil-wa-perempuan-aesthetic.jpg',
-                              width: 130,
-                              height: 130,
-                              fit: BoxFit.cover,
-                            ),
+                      child: Image.network(
+                        'https://berita.99.co/wp-content/uploads/2023/01/foto-profil-wa-perempuan-aesthetic.jpg',
+                        width: 130,
+                        height: 130,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   Positioned(
                       bottom: 0,
                       right: 0,
                       child: GestureDetector(
-                        onTap: () {
-                          _pickImage();
-                        },
+                        onTap: () {},
                         child: Container(
                           height: 40,
                           width: 40,

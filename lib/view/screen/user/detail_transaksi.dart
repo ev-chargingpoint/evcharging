@@ -1,19 +1,18 @@
 import 'package:evchargingpoint/model/chargecar_model.dart';
-import 'package:evchargingpoint/model/chargingstation_model.dart';
 import 'package:evchargingpoint/service/api_sevices.dart';
-import 'package:evchargingpoint/view/screen/user/discover_page.dart';
+import 'package:evchargingpoint/view/widget/bottomNavigationUser.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SummaryPay extends StatefulWidget {
-  final ChargingStation chargingStation;
-  const SummaryPay({super.key, required this.chargingStation});
+class DetailTransaksi extends StatefulWidget {
+  final ChargeCar chargetransaksi;
+  const DetailTransaksi({super.key, required this.chargetransaksi});
 
   @override
-  State<SummaryPay> createState() => _SummaryPayState();
+  State<DetailTransaksi> createState() => _DetailTransaksiState();
 }
 
-class _SummaryPayState extends State<SummaryPay> {
+class _DetailTransaksiState extends State<DetailTransaksi> {
   late SharedPreferences userdata;
   final _dataservice = ApiServices();
 
@@ -21,49 +20,6 @@ class _SummaryPayState extends State<SummaryPay> {
   final _nomorhp = TextEditingController();
   final _namakendaraan = TextEditingController();
   final _nomorpolisi = TextEditingController();
-
-  final TextEditingController _starttime = TextEditingController();
-  final TextEditingController _endtime = TextEditingController();
-  final TextEditingController _paymentmethod = TextEditingController();
-  final TextEditingController _totalprice = TextEditingController();
-  final TextEditingController _totalkwh = TextEditingController();
-  final TextEditingController _idchargecar = TextEditingController();
-  final TextEditingController _inputpembayaran = TextEditingController();
-
-  Future<void> retreiveData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _idchargecar.text = prefs.getString('idchargecar') ?? '';
-      _starttime.text = prefs.getString('starttime') ?? '';
-      _paymentmethod.text = prefs.getString('paymentmethod') ?? '';
-      _endtime.text = prefs.getString('endtime') ?? '';
-      _totalprice.text = prefs.getString('totalprice') ?? '';
-      _totalkwh.text = prefs.getString('totalkwh') ?? '';
-      _inputpembayaran.text = prefs.getString('inputpembayaran') ?? '';
-      print(
-        _idchargecar.text,
-      );
-      print(
-        _starttime.text,
-      );
-      print(
-        _endtime.text,
-      );
-      print(
-        _totalprice.text,
-      );
-      print(
-        _totalkwh.text,
-      );
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchUserData();
-    retreiveData();
-  }
 
   _fetchUserData() async {
     userdata = await SharedPreferences.getInstance();
@@ -75,13 +31,19 @@ class _SummaryPayState extends State<SummaryPay> {
     });
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserData();
+  }
+
   void _putCharge() async {
     final putData = ChargeCarStatus(
       status: true,
     );
 
     StatusChargeResponse? res = await _dataservice.putChargeStatus(
-      _idchargecar.text,
+      widget.chargetransaksi.id,
       putData,
     );
 
@@ -92,33 +54,28 @@ class _SummaryPayState extends State<SummaryPay> {
     }
   }
 
-  // Future<void> _savepayment() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   prefs.setString('paymentmethod', _paymentmethod.text);
-  //   prefs.setString('inputpembayaran', _totalprice.text);
-  //   prefs.setBool('payment', true);
-  //   prefs.setString('idchargecar', _idchargecar.text);
-  // }
-
   void _showSuccessAlert(String message) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Success"),
+          title: const Text("Success"),
           content: Text(message),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
           actions: [
             TextButton(
-               onPressed: () {
+              onPressed: () {
                 Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => const DiscoverPage()),
-                    ((route) => false));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const BottomNavbar(),
+                  ),
+                  (route) => false,
+                );
               },
-              child: Text("OK"),
+              child: const Text("OK"),
             ),
           ],
         );
@@ -131,7 +88,7 @@ class _SummaryPayState extends State<SummaryPay> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Error"),
+          title: const Text("Error"),
           content: Text(message),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -141,7 +98,7 @@ class _SummaryPayState extends State<SummaryPay> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("OK"),
+              child: const Text("OK"),
             ),
           ],
         );
@@ -239,17 +196,16 @@ class _SummaryPayState extends State<SummaryPay> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text('Chargigng Station'),
-                          Text(widget.chargingStation.nama)
+                          Text(widget.chargetransaksi.chargingstation.nama)
                         ],
                       ),
-                      const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text('Alamat'),
-                          Text(widget.chargingStation.alamat)
-                        ],
-                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   children: [
+                      //     const Text('Alamat'),
+                      //     Text(widget.chargetransaksi.chargingstation.harga)
+                      //   ],
+                      // ),
                     ],
                   ),
                 ),
@@ -269,7 +225,7 @@ class _SummaryPayState extends State<SummaryPay> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text('Start Charging'),
-                          Text(_starttime.text),
+                          Text(widget.chargetransaksi.starttime),
                         ],
                       ),
                       const SizedBox(height: 20),
@@ -277,7 +233,7 @@ class _SummaryPayState extends State<SummaryPay> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text('End Charging'),
-                          Text(_endtime.text),
+                          Text(widget.chargetransaksi.endtime),
                         ],
                       ),
                       const SizedBox(height: 20),
@@ -285,7 +241,7 @@ class _SummaryPayState extends State<SummaryPay> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text('Total Pengisian'),
-                          Text(_totalkwh.text),
+                          Text(widget.chargetransaksi.totalkwh),
                         ],
                       ),
                       const SizedBox(height: 20),
@@ -293,7 +249,7 @@ class _SummaryPayState extends State<SummaryPay> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text('Total Harga'),
-                          Text(_totalprice.text),
+                          Text(widget.chargetransaksi.totalprice),
                         ],
                       ),
                       const SizedBox(height: 20),
@@ -301,7 +257,7 @@ class _SummaryPayState extends State<SummaryPay> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text('Payment Method'),
-                          Text(_paymentmethod.text),
+                          Text(widget.chargetransaksi.paymentmethod),
                         ],
                       ),
                       const SizedBox(height: 20),
@@ -309,7 +265,7 @@ class _SummaryPayState extends State<SummaryPay> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text('Total Bayar'),
-                          Text(_inputpembayaran.text),
+                          Text(widget.chargetransaksi.inputpembayaran),
                         ],
                       ),
                     ],
@@ -332,7 +288,7 @@ class _SummaryPayState extends State<SummaryPay> {
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            child: const Text('Submit'),
+            child: const Text('Selesai Charge'),
           ),
         ),
       ),
