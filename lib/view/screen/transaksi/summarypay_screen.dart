@@ -1,7 +1,7 @@
 import 'package:evchargingpoint/model/chargecar_model.dart';
 import 'package:evchargingpoint/model/chargingstation_model.dart';
 import 'package:evchargingpoint/service/api_sevices.dart';
-import 'package:evchargingpoint/view/screen/user/discover_page.dart';
+import 'package:evchargingpoint/view/widget/bottomnavigatoruser.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -105,7 +105,7 @@ class _SummaryPayState extends State<SummaryPay> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Success"),
+          title: const Text("Success"),
           content: Text(message),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -115,10 +115,10 @@ class _SummaryPayState extends State<SummaryPay> {
                onPressed: () {
                 Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => const DiscoverPage()),
+                    MaterialPageRoute(builder: (context) => const BottomNavigatorUser()),
                     ((route) => false));
               },
-              child: Text("OK"),
+              child: const Text("OK"),
             ),
           ],
         );
@@ -131,7 +131,7 @@ class _SummaryPayState extends State<SummaryPay> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Error"),
+          title: const Text("Error"),
           content: Text(message),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -141,7 +141,7 @@ class _SummaryPayState extends State<SummaryPay> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("OK"),
+              child: const Text("OK"),
             ),
           ],
         );
