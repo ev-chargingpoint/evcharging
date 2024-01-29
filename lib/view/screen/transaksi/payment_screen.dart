@@ -155,98 +155,100 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Padding(
-      // key: _formKey,
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-          Stack(
-            children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: SizedBox(
-                  width: 36.0,
-                  height: 70.0,
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    backgroundColor: Colors.grey,
-                    elevation: 0.0,
-                    child: const Icon(
-                      Icons.arrow_back,
-                      size: 20.0,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-              const Align(
-                alignment: Alignment.topCenter,
-                child: Padding(
-                  padding: EdgeInsets.only(top: 32.0),
-                  child: Text(
-                    'Pembayaran',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          const Text(
-            'Pilih Metode Pembayaran',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 20),
-          ListView(
-            shrinkWrap: true,
-            children: [
-              buildPaymentOption('Kartu Kredit'),
-              buildPaymentOption('Kartu Debit'),
-              buildPaymentOption('Transfer Bank'),
-              buildPaymentOption('E-Wallet'),
-            ],
-          ),
-          const SizedBox(height: 200),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  const Text(
-                    'Total Pembayaran',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    'Rp. ${_totalprice.text}',
-                    style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
+    return SingleChildScrollView(
+      child: Scaffold(
+          body: Padding(
+        // key: _formKey,
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: SizedBox(
+                    width: 36.0,
+                    height: 70.0,
+                    child: FloatingActionButton(
                       onPressed: () {
-                        selectedPaymentMethod.isEmpty ? null : () => _putCharge();
-                        _putCharge();
+                        Navigator.pop(context);
                       },
-                      child: const Text('Bayar'),
+                      backgroundColor: Colors.grey,
+                      elevation: 0.0,
+                      child: const Icon(
+                        Icons.arrow_back,
+                        size: 20.0,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ],
-              ),
+                ),
+                const Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 32.0),
+                    child: Text(
+                      'Pembayaran',
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          )
-        ],
-      ),
-    ));
+            const SizedBox(height: 20),
+            const Text(
+              'Pilih Metode Pembayaran',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            ListView(
+              shrinkWrap: true,
+              children: [
+                buildPaymentOption('Kartu Kredit'),
+                buildPaymentOption('Kartu Debit'),
+                buildPaymentOption('Transfer Bank'),
+                buildPaymentOption('E-Wallet'),
+              ],
+            ),
+            const SizedBox(height: 200),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    const Text(
+                      'Total Pembayaran',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Rp. ${_totalprice.text}',
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          selectedPaymentMethod.isEmpty ? null : () => _putCharge();
+                          _putCharge();
+                        },
+                        child: const Text('Bayar'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      )),
+    );
   }
 
   Widget buildPaymentOption(String option) {
