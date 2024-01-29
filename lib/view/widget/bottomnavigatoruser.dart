@@ -3,14 +3,14 @@ import 'package:evchargingpoint/view/screen/user/home_page.dart';
 import 'package:evchargingpoint/view/screen/user/profile.dart';
 import 'package:flutter/material.dart';
 
-class BottomNavbar extends StatefulWidget {
-  const BottomNavbar({super.key});
+class BottomNavigatorUser extends StatefulWidget {
+  const BottomNavigatorUser({super.key});
 
   @override
-  State<BottomNavbar> createState() => _BottomNavbarState();
+  State<BottomNavigatorUser> createState() => _BottomNavigatorUserState();
 }
 
-class _BottomNavbarState extends State<BottomNavbar> {
+class _BottomNavigatorUserState extends State<BottomNavigatorUser> {
   int _currentPageIndex = 0;
   final List<Widget> _pages = [
     const HomePage(),
@@ -59,3 +59,8 @@ class _BottomNavbarState extends State<BottomNavbar> {
     );
   }
 }
+
+
+  
+
+
