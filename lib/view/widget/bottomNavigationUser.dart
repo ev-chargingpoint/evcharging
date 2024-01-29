@@ -21,7 +21,12 @@ class _BottomNavbarState extends State<BottomNavbar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_currentPageIndex],
+      body: 
+      // _pages[_currentPageIndex],
+      IndexedStack(
+      index: _currentPageIndex,
+      children: _pages,
+    ),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
           boxShadow: [

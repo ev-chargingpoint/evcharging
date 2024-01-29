@@ -70,6 +70,12 @@ class _BookingScreenState extends State<BookingScreen> {
       return;
     }
 
+    // Validasi KWh tidak boleh 0
+    if (_kwh == 0) {
+      _showErrorAlert('KWh tidak boleh 0');
+      return;
+    }
+
     // Buat objek ChargeCarInput
     final postData = ChargeCarInput(
       starttime: _startChargeController.text,
@@ -84,19 +90,17 @@ class _BookingScreenState extends State<BookingScreen> {
     );
 
     try {
-      if (res != null && res.status == 201) {
-        if (res.data != null && res.data!['_id'] != null) {
-          await _saveChargeCarId(res.data!['_id']);
-        }
-        if (res.message != null) {
-          _showSuccessAlert(res.message);
-        }
-      } else {
-        _showErrorAlert(res?.message ?? 'An error occurred');
-      }
-    } catch (e) {
-      print('An error occurred: $e');
+  if (res != null && res.status == 201) {
+    if (res.data != null && res.data!['_id'] != null) {
+      await _saveChargeCarId(res.data!['_id']);
     }
+    _showSuccessAlert(res.message);
+    } else {
+    _showErrorAlert(res?.message ?? 'An error occurred');
+  }
+} catch (e) {
+  print('An error occurred: $e');
+}
   }
 
   Future<void> _saveChargeCarId(String chargeCarId) async {
