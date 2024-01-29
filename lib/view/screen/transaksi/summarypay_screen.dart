@@ -92,13 +92,6 @@ class _SummaryPayState extends State<SummaryPay> {
     }
   }
 
-  // Future<void> _savepayment() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   prefs.setString('paymentmethod', _paymentmethod.text);
-  //   prefs.setString('inputpembayaran', _totalprice.text);
-  //   prefs.setBool('payment', true);
-  //   prefs.setString('idchargecar', _idchargecar.text);
-  // }
 
   void _showSuccessAlert(String message) {
     showDialog(
