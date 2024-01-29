@@ -278,7 +278,7 @@ class _SummaryPayState extends State<SummaryPay> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text('Total Pengisian'),
-                          Text(_totalkwh.text),
+                          Text('${_totalkwh.text} kWh'),
                         ],
                       ),
                       const SizedBox(height: 20),
@@ -286,7 +286,7 @@ class _SummaryPayState extends State<SummaryPay> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text('Total Harga'),
-                          Text(_totalprice.text),
+                          Text("Rp. ${_totalprice.text}"),
                         ],
                       ),
                       const SizedBox(height: 20),
@@ -302,7 +302,7 @@ class _SummaryPayState extends State<SummaryPay> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text('Total Bayar'),
-                          Text(_inputpembayaran.text),
+                          Text("Rp. ${_inputpembayaran.text}"),
                         ],
                       ),
                     ],
