@@ -4,14 +4,14 @@ import 'package:evchargingpoint/view/screen/user/profile.dart';
 import 'package:evchargingpoint/view/screen/user/transaksi_list.dart';
 import 'package:flutter/material.dart';
 
-class BottomNavbar extends StatefulWidget {
-  const BottomNavbar({super.key});
+class BottomNavigatorUser extends StatefulWidget {
+  const BottomNavigatorUser({super.key});
 
   @override
-  State<BottomNavbar> createState() => _BottomNavbarState();
+  State<BottomNavigatorUser> createState() => _BottomNavigatorUserState();
 }
 
-class _BottomNavbarState extends State<BottomNavbar> {
+class _BottomNavigatorUserState extends State<BottomNavigatorUser> {
   int _currentPageIndex = 0;
   final List<Widget> _pages = [
     const HomePage(),
@@ -23,7 +23,12 @@ class _BottomNavbarState extends State<BottomNavbar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_currentPageIndex],
+      body: 
+      // _pages[_currentPageIndex],
+      IndexedStack(
+      index: _currentPageIndex,
+      children: _pages,
+    ),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
           boxShadow: [
@@ -58,3 +63,8 @@ class _BottomNavbarState extends State<BottomNavbar> {
     );
   }
 }
+
+
+  
+
+

@@ -3,7 +3,7 @@ import 'package:evchargingpoint/service/api_sevices.dart';
 import 'package:evchargingpoint/service/auth_manager.dart';
 import 'package:evchargingpoint/view/auth/register_screen.dart';
 import 'package:evchargingpoint/view/screen/admin/home_admin.dart';
-import 'package:evchargingpoint/view/widget/bottomNavigationUser.dart';
+import 'package:evchargingpoint/view/widget/bottomnavigatoruser.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -160,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                           Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const BottomNavbar()),
+                                  builder: (context) => const BottomNavigatorUser()),
                               ((route) => false));
                         }
                       } else {
