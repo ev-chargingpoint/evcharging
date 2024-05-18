@@ -49,8 +49,22 @@ class _TransaksiPageState extends State<TransaksiPage> {
                 child: Text('Error: ${snapshot.error}'),
               );
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return const Center(
-                child: Text('No data available'),
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.error_outline,
+                      color: Colors.grey,
+                      size: 70.0,
+                    ),
+                    const SizedBox(height: 15.0),
+                    Text(
+                      'Belum ada transaksi yang dilakukan',
+                      style: TextStyle(fontSize: 17.0),
+                    ),
+                  ],
+                ),
               );
             } else {
               List<ChargeCar> data = snapshot.data!;

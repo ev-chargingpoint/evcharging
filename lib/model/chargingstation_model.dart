@@ -37,7 +37,7 @@ class ChargingStation {
       chargingkode: json['chargingkode'] ?? '',
       nama: json['nama'] ?? '',
       alamat: json['alamat'] ?? '',
-      ammountplugs: json['ammountplugs'] ?? '',
+      ammountplugs: json['ammountplugs'] as int,
       daya: json['daya'] ?? '',
       connector: json['connector'] ?? '',
       harga: json['harga'] ?? '',
@@ -46,7 +46,7 @@ class ChargingStation {
       jamoperasional: json['jamoperasional'] ?? '',
       longitude: json['longitude'] ?? '',
       latitude: json['latitude'] ?? '',
-      available: json['available'] ?? '',
+      available: json['available'] as int,
     );
   }
 }

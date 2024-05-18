@@ -69,7 +69,12 @@ class _BookingScreenState extends State<BookingScreen> {
     if (!isValidForm) {
       return;
     }
-<<<<<<< HEAD
+
+    // Validasi KWh tidak boleh 0
+    if (_kwh == 0) {
+      _showErrorAlert('KWh tidak boleh 0');
+      return;
+    }
 
     // Buat objek ChargeCarInput
     final postData = ChargeCarInput(
@@ -101,47 +106,6 @@ class _BookingScreenState extends State<BookingScreen> {
     prefs.setString('idchargecar', chargeCarId);
   }
 
-=======
-
-    // Validasi KWh tidak boleh 0
-    if (_kwh == 0) {
-      _showErrorAlert('KWh tidak boleh 0');
-      return;
-    }
-
-    // Buat objek ChargeCarInput
-    final postData = ChargeCarInput(
-      starttime: _startChargeController.text,
-      endtime: _endChargeController.text,
-      totalkwh: _kwhController.text,
-      totalprice: _totalChargeController.text,
-    );
-
-    PostChargeResponse? res = await _dataService.postCharge(
-      widget.chargingStation.id,
-      postData,
-    );
-
-    try {
-  if (res != null && res.status == 201) {
-    if (res.data != null && res.data!['_id'] != null) {
-      await _saveChargeCarId(res.data!['_id']);
-    }
-    _showSuccessAlert(res.message);
-    } else {
-    _showErrorAlert(res?.message ?? 'An error occurred');
-  }
-} catch (e) {
-  print('An error occurred: $e');
-}
-  }
-
-  Future<void> _saveChargeCarId(String chargeCarId) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('idchargecar', chargeCarId);
-  }
-
->>>>>>> 23ea71881fed9fc78acab13351cafbecce55427d
   Future<void> _savepayment() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('starttime', _startChargeController.text);
@@ -163,13 +127,13 @@ class _BookingScreenState extends State<BookingScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pushAndRemoveUntil(
+                Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => PaymentScreen(
                               chargingStation: widget.chargingStation,
                             )),
-                    ((route) => false));
+                );
               },
               child: Text("OK"),
             ),

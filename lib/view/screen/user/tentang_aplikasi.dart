@@ -53,6 +53,7 @@ class _TentangAplikasiState extends State<TentangAplikasi> {
                     ),
                   ),
                   const SizedBox(height: 15.0),
+                  const SizedBox(height: 15.0),
                   Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),

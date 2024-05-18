@@ -13,8 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiServices {
   final Dio dio = Dio();
 
-  final String _baseUrl =
-      'https://asia-southeast2-keamanansistem.cloudfunctions.net';
+  final String _baseUrl = 'https://api-evcharging.vercel.app';
 
   Future<List<ChargingStation>> getAllChargingStation() async {
     try {
@@ -55,19 +54,19 @@ class ApiServices {
           },
         ),
       );
-      if (response.statusCode == 200) {
-        List<dynamic> responseData = jsonDecode(response.data)['data'];
-        print(response.data);
+      if (response.statusCode == 200 && response.data != null) {
+        var decodedData = jsonDecode(response.data);
+        if (decodedData != null && decodedData.containsKey('data')) {
+          List<dynamic> responseData = decodedData['data'];
 
-        if (responseData == null) {
-          throw Exception('No data available');
+          if (responseData != null && responseData.isNotEmpty) {
+            final chargeCars =
+                responseData.map((item) => ChargeCar.fromJson(item)).toList();
+            return chargeCars;
+          }
         }
-
-        final chargeCars =
-            responseData.map((item) => ChargeCar.fromJson(item)).toList();
-        return chargeCars;
       }
-      return [];
+      return []; // Kembalikan list kosong jika tidak ada data
     } on DioException catch (e) {
       if (e.response != null && e.response!.statusCode != 200) {
         debugPrint('Failed to get transaction data');
@@ -82,7 +81,7 @@ class ApiServices {
   Future<LoginResponse?> login(LoginInput login) async {
     try {
       final response = await dio.post(
-        '$_baseUrl/login-evcharging',
+        '$_baseUrl/login',
         data: login.toJson(),
       );
       print(response.data);
@@ -104,7 +103,7 @@ class ApiServices {
   Future<RegisterResponse?> register(RegisterInput register) async {
     try {
       final response = await dio.post(
-        '$_baseUrl/register-evcharging',
+        '$_baseUrl/register',
         data: register.toJson(),
       );
       print(response.data);
@@ -311,7 +310,7 @@ class ApiServices {
       }
 
       final response = await dio.get(
-        '$_baseUrl/profile-evcharging',
+        '$_baseUrl/profile',
         options: Options(
           headers: {
             'Authorization': $token,
@@ -353,7 +352,7 @@ class ApiServices {
       }
 
       final response = await dio.put(
-        '$_baseUrl/profile-evcharging',
+        '$_baseUrl/profile',
         data: {
           'password': password,
           'confirmpassword': confirmpassword,

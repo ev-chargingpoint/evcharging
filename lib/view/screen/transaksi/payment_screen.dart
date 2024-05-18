@@ -50,7 +50,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
     });
   }
 
-<<<<<<< HEAD
   @override
   void initState() {
     super.initState();
@@ -67,6 +66,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   void _putCharge() async {
+    if (selectedPaymentMethod.isEmpty) {
+      _showErrorAlert('Pilih metode pembayaran terlebih dahulu');
+      return;
+    }
+
     final putData = ChargeCarPut(
       paymentmethod: selectedPaymentMethod,
       inputpembayaran: _totalprice.text,
@@ -84,50 +88,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
     } else {
       _showErrorAlert(res?.message ?? 'An error occurred');
     }
-=======
-  void _putCharge() async {
-    if (selectedPaymentMethod.isEmpty) {
-      _showErrorAlert('Pilih metode pembayaran terlebih dahulu');
-      return;
-    }
-
-    await _savecharge();
-    await _savepayment();
-    // Buat objek ChargeCarInput
-    final putData = ChargeCarPut(
-      paymentmethod: selectedPaymentMethod,
-      inputpembayaran: _totalprice.text,
-      payment: true,
-    );
-
-    PutChargeResponse? res = await _dataService.putCharge(
-      _idchargecar.text,
-      putData,
-    );
-
-    if (res != null && res.status == 201) {
-      _showSuccessAlert(res.message);
-    } else {
-      _showErrorAlert(res?.message ?? 'An error occurred');
-    }
-  }
-
-  Future<void> _savecharge() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('starttime', _starttime.text);
-    prefs.setString('endtime', _endtime.text);
-    prefs.setString('totalkwh', _totalkwh.text);
-    prefs.setString('totalprice', _totalprice.text);
-    prefs.setString('idchargecar', _idchargecar.text);
-  }
-
-  Future<void> _savepayment() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('paymentmethod', selectedPaymentMethod);
-    prefs.setString('inputpembayaran', _totalprice.text);
-    prefs.setBool('payment', true);
-    prefs.setString('idchargecar', _idchargecar.text);
->>>>>>> 23ea71881fed9fc78acab13351cafbecce55427d
   }
 
   void _showSuccessAlert(String message) {
@@ -146,13 +106,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-<<<<<<< HEAD
                         builder: (context) => const BottomNavbar()),
-=======
-                        builder: (context) => SummaryPay(
-                              chargingStation: widget.chargingStation,
-                            )),
->>>>>>> 23ea71881fed9fc78acab13351cafbecce55427d
                     ((route) => false));
               },
               child: const Text("OK"),
@@ -187,97 +141,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   @override
-<<<<<<< HEAD
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Padding(
-      // key: _formKey,
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-          Stack(
-            children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: SizedBox(
-                  width: 36.0,
-                  height: 70.0,
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    backgroundColor: Colors.grey,
-                    elevation: 0.0,
-                    child: const Icon(
-                      Icons.arrow_back,
-                      size: 20.0,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-              const Align(
-                alignment: Alignment.topCenter,
-                child: Padding(
-                  padding: EdgeInsets.only(top: 32.0),
-                  child: Text(
-                    'Pembayaran',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          const Text(
-            'Pilih Metode Pembayaran',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 20),
-          ListView(
-            shrinkWrap: true,
-            children: [
-              buildPaymentOption('Kartu Kredit'),
-              buildPaymentOption('Kartu Debit'),
-              buildPaymentOption('Transfer Bank'),
-              buildPaymentOption('E-Wallet'),
-            ],
-          ),
-          const SizedBox(height: 220),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Column(
-                children: [
-                  const Text(
-                    'Total Pembayaran',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    'Rp. ${_totalprice.text}',
-                    style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-=======
-  void initState() {
-    super.initState();
-    retreiveData();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Scaffold(
-          body: Padding(
+        body: SingleChildScrollView(
+      child: Padding(
         // key: _formKey,
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -290,18 +157,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     width: 36.0,
                     height: 70.0,
                     child: FloatingActionButton(
->>>>>>> 23ea71881fed9fc78acab13351cafbecce55427d
                       onPressed: () {
                         Navigator.pop(context);
                       },
-<<<<<<< HEAD
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: const Text('Bayar'),
-=======
                       backgroundColor: Colors.grey,
                       elevation: 0.0,
                       child: const Icon(
@@ -309,7 +167,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         size: 20.0,
                         color: Colors.white,
                       ),
->>>>>>> 23ea71881fed9fc78acab13351cafbecce55427d
                     ),
                   ),
                 ),
@@ -342,11 +199,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 buildPaymentOption('E-Wallet'),
               ],
             ),
-            const SizedBox(height: 200),
+            const SizedBox(height: 220),
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(5.0),
                 child: Column(
                   children: [
                     const Text(
@@ -365,9 +222,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       height: 50,
                       child: ElevatedButton(
                         onPressed: () {
-                          selectedPaymentMethod.isEmpty ? null : () => _putCharge();
                           _putCharge();
                         },
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
                         child: const Text('Bayar'),
                       ),
                     ),
@@ -377,8 +238,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
             )
           ],
         ),
-      )),
-    );
+      ),
+    ));
   }
 
   Widget buildPaymentOption(String option) {

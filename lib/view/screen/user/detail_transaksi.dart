@@ -1,10 +1,6 @@
 import 'package:evchargingpoint/model/chargecar_model.dart';
 import 'package:evchargingpoint/service/api_sevices.dart';
-<<<<<<< HEAD:lib/view/screen/user/detail_transaksi.dart
 import 'package:evchargingpoint/view/widget/bottomNavigationUser.dart';
-=======
-import 'package:evchargingpoint/view/widget/bottomnavigatoruser.dart';
->>>>>>> 23ea71881fed9fc78acab13351cafbecce55427d:lib/view/screen/transaksi/summarypay_screen.dart
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -58,10 +54,6 @@ class _DetailTransaksiState extends State<DetailTransaksi> {
     }
   }
 
-<<<<<<< HEAD:lib/view/screen/user/detail_transaksi.dart
-=======
-
->>>>>>> 23ea71881fed9fc78acab13351cafbecce55427d:lib/view/screen/transaksi/summarypay_screen.dart
   void _showSuccessAlert(String message) {
     showDialog(
       context: context,
@@ -76,18 +68,12 @@ class _DetailTransaksiState extends State<DetailTransaksi> {
             TextButton(
               onPressed: () {
                 Navigator.pushAndRemoveUntil(
-<<<<<<< HEAD:lib/view/screen/user/detail_transaksi.dart
                   context,
                   MaterialPageRoute(
                     builder: (context) => const BottomNavbar(),
                   ),
                   (route) => false,
                 );
-=======
-                    context,
-                    MaterialPageRoute(builder: (context) => const BottomNavigatorUser()),
-                    ((route) => false));
->>>>>>> 23ea71881fed9fc78acab13351cafbecce55427d:lib/view/screen/transaksi/summarypay_screen.dart
               },
               child: const Text("OK"),
             ),
@@ -255,11 +241,7 @@ class _DetailTransaksiState extends State<DetailTransaksi> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text('Total Pengisian'),
-<<<<<<< HEAD:lib/view/screen/user/detail_transaksi.dart
-                          Text(widget.chargetransaksi.totalkwh),
-=======
-                          Text('${_totalkwh.text} kWh'),
->>>>>>> 23ea71881fed9fc78acab13351cafbecce55427d:lib/view/screen/transaksi/summarypay_screen.dart
+                          Text('${widget.chargetransaksi.totalkwh} kWh'),
                         ],
                       ),
                       const SizedBox(height: 20),
@@ -267,11 +249,7 @@ class _DetailTransaksiState extends State<DetailTransaksi> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text('Total Harga'),
-<<<<<<< HEAD:lib/view/screen/user/detail_transaksi.dart
-                          Text(widget.chargetransaksi.totalprice),
-=======
-                          Text("Rp. ${_totalprice.text}"),
->>>>>>> 23ea71881fed9fc78acab13351cafbecce55427d:lib/view/screen/transaksi/summarypay_screen.dart
+                          Text("Rp. ${widget.chargetransaksi.totalprice}"),
                         ],
                       ),
                       const SizedBox(height: 20),
@@ -287,11 +265,7 @@ class _DetailTransaksiState extends State<DetailTransaksi> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text('Total Bayar'),
-<<<<<<< HEAD:lib/view/screen/user/detail_transaksi.dart
-                          Text(widget.chargetransaksi.inputpembayaran),
-=======
-                          Text("Rp. ${_inputpembayaran.text}"),
->>>>>>> 23ea71881fed9fc78acab13351cafbecce55427d:lib/view/screen/transaksi/summarypay_screen.dart
+                          Text("Rp. ${widget.chargetransaksi.totalprice}"),
                         ],
                       ),
                     ],
